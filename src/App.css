@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --primary-font-montserrat: "Montserrat", sans-serif;
+  --secondary-font-outfit: "Outfit", sans-serif;
+  --primary-font-color: #00263d; /* all font colors dark blue  */
+  --primary-background-color: #e0fbfc; /* light cyan */
+  --primary-border-color: #00263d38; /* light border around input boxes color*/
+  --secondary-border-color: #00263d80; /* border below sections */
+  --green-color: #339989; /*green icons color*/
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#markAll {
+  accent-color: #319cd1;
+}
+.checkbox-color{
+  accent-color: #319cd1;
+}
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+  border: none;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  margin: 5px;
+  background: var(--primary-background-color);
+  border-radius: 10px;
+  border: 0.2px solid #00263d80;
+}
+
+/* ----ANT Date picker custom styling---- */
+.ant-picker.form-control {
+  border-radius: 5px;
+  border: 0.2px solid var(--primary-border-color);
+  outline: none;
+}
+
+.ant-picker.ant-picker-focused {
+  box-shadow: none;
+  border-inline-end-width: 0.2px;
+}
+
+.ant-picker .ant-picker-input > input::placeholder {
+  color: rgb(117, 117, 117);
+  font-family: var(--secondary-font-outfit);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.ant-picker .ant-picker-input > input {
+  color: var(--primary-font-color);
+  font-family: var(--secondary-font-outfit);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+.headingText .span{
+background-color: red;
+}
+.notifications-count{
+  text-align: center;
+  background-color: red;
+  color: white;
+  background-color: red;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  height: 20px;
+  position: absolute;
+  right: -4px;
+  top: -10px;
+  width: 20px;
+}
+.all-notifications-link{
+  /* border-top: 1px solid #bababa; */
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px;
+    text-align: center;
+
+    width: 100%;
+
+}
+.notification-title{
+list-style: none;
+  font-size: 20px;
+  font-weight: 500;
+
+
+}
+.notification-date{
+  list-style: none;
+  font-size: 16px;
+
+}
+
+.notifications-message{
+
+  font-family: var(--secondary-font-outfit);
+  list-style: none;
+  font-size: 16px;
+  margin-bottom: 2px;
+  font-weight: 400;
+  list-style: none;
+}
+.main-header{
+  padding: 15px 108px;
+    width: 100%;
+
+}
+.block-section{
+  margin-bottom: 12px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px 0 rgba(58, 53, 65, .1);
+  padding: 15px 30px;
+
+}
+.block-section-model{
+  margin-bottom: 12px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px 0 rgba(58, 53, 65, .1);
+
+}
+.hide {
+  display: none !important;
+}
+.task-img{
+    border-radius: 10px;
+    height: 80px;
+    padding: 10px;
+    width: 80px;
+}
+.pagination{
+  cursor: pointer;
+  --bs-pagination-active-border-color:#319cd1;
+  --bs-pagination-active-bg: #319cd1;
+}
+.page-link{
+  color:#319cd1 ;
+}
+.page-link:hover{
+  color: #000 ;
+}
+.ipAddressList{
+  border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    color: var(--primary-font-color);
+    font-family: var(--secondary-font-outfit);
+}
+.time-entries-list{
+padding:20px;
+border-bottom:1px solid#ddd;
+ line-height:0.4
+}

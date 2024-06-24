@@ -1,0 +1,76 @@
+.projectDetailsContentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  gap: 15px;
+  padding: 7px 15px;
+  border-radius: 5px;
+  border: 0.2px solid var(--primary-border-color);
+  max-height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.detailsWrapper .detailsHeader .title {
+  margin: 0;
+  font-family: var(--secondary-font-outfit);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+  position: relative;
+  bottom: -5px;
+  left: 5px;
+}
+
+.profileInputField {
+  font-family: var(--secondary-font-outfit);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  padding: 13px 3px 1px 5px;
+  border-radius: 5px;
+  color: var(--primary-font-color);
+  border: 0.2px solid var(--primary-border-color);
+  outline: none;
+}
+
+.slashSpan {
+  position: relative;
+  top: 5px;
+  font-family: var(--secondary-font-outfit);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+}
+
+.projectDetailsContent {
+  color: var(--primary-font-color);
+  font-family: var(--secondary-font-outfit);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.projectDetailsContent span {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+.hidePasswordStyling {
+  right: 10px;
+  top: 4px;
+  cursor: pointer;
+}
+.eyeIconsSize {
+  height: 20px;
+  width: 20px;
+  color: var(--primary-font-color);
+  opacity: 0.5;
+}

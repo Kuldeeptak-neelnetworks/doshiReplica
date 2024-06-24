@@ -1,0 +1,64 @@
+.entryTitle {
+    font-family: var(--secondary-font-outfit);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0;
+    padding: 7px 15px;
+  }
+  
+  .timeEntriesWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  
+    width: 100%;
+  }
+  .memberTimeEntriesList{
+
+    font-size: 17px;
+    line-height:2px;
+    padding: 10px 20px;
+    background: #fff;
+    
+  }
+
+  
+  
+  
+  .entries {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    font-family: var(--secondary-font-outfit);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1;
+    padding: 15px 30px 15px 15px;
+    /* border-radius: 5px; */
+    color: var(--primary-font-color);
+    border: 0.2px solid var(--primary-border-color);
+    outline: none;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .reactCalendar.customReactCalendar {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 4px 20px 0px #00000033;
+    outline: none;
+    border: 0;
+    border-radius: 20px;
+    padding: 25px;
+  }
+  
+  .addJobEntryContent {
+    background: #e0fbfc;
+    border-radius: 10px;
+    box-shadow: 1px 2px 4px gray;
+    width: 100%;
+    padding: 20px 20px;
+  }
+  

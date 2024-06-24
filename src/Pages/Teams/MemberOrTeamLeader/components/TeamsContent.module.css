@@ -1,0 +1,59 @@
+.heading {
+  font-family: var(--secondary-font-outfit);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--primary-font-color);
+}
+.hide {
+  display: none;
+}
+
+.title {
+  font-family: var(--secondary-font-outfit);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+}
+
+.membersCount {
+  font-family: var(--secondary-font-outfit);
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+  padding-bottom: 10px;
+  border-bottom: 0.2px solid var(--primary-border-color);
+}
+
+.text {
+  font-family: var(--secondary-font-outfit);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+  padding-bottom: 12px;
+}
+
+.subText {
+  font-family: var(--secondary-font-outfit);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--primary-font-color);
+  padding-bottom: 6px;
+}
+
+.updateJobBtn {
+  font-family: var(--primary-font-montserrat);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border: 0;
+  outline: none;
+  border-radius: 5px;
+  background-color: var(--primary-font-color);
+  color: var(--primary-background-color);
+  letter-spacing: 0.5px;
+}

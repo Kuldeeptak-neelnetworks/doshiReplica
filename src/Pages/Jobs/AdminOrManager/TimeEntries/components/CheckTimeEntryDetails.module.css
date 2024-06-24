@@ -1,0 +1,16 @@
+.jobName {
+  color: var(--primary-font-color);
+  font-family: var(--primary-font-montserrat);
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.text {
+  color: var(--primary-font-color);
+  font-family: var(--secondary-font-outfit);
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 400;
+}
