@@ -9,6 +9,7 @@ import {
 
 export const ContextAPI = createContext();
 // export const nnAPIKey = `fcbf2fee98cee0be1da58b8a2066b7d3826f335def2261d693208e16275dde5b`;
+// export const nnAPIKey = `fcbf2fee98cee0be1da58b8a2066b7d3826f335def2261d693208e16275dde5b`;
 export const nnAPIKey = process.env.REACT_APP_NN_API;
 
 export const ApiContext = ({ children }) => {
