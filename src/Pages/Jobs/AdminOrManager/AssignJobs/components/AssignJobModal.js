@@ -13,6 +13,7 @@ import {
   presentDate,
 } from "../../../../../utils/utilities/utilityFunctions";
 import { ReactHotToast } from "../../../../../Components/ReactHotToast/ReactHotToast";
+import moment from "moment";
 
 const MyVerticallyCenteredModal = (props) => {
   const {
@@ -82,7 +83,7 @@ const MyVerticallyCenteredModal = (props) => {
         .map(({ job_name, job_id, bpo_no, additional_data }) => {
           const billingRates = JSON.parse(additional_data).billing_rates;
           return {
-            label: `${job_name} (${bpo_no}) `,
+            label: `(${bpo_no}) ${job_name}  `,
             value: `${job_id} - Billing Rate: ${billingRates}`,
           };
         }),
@@ -391,6 +392,7 @@ const MyVerticallyCenteredModal = (props) => {
                       value={assignJobDetails.schedulerEndsOn.date}
                       name="startDate"
                       placeholder="Select / Enter date in YYYY-MM-DD format"
+                      disabledDate={(current) => current && current < moment().startOf("day")}
                     />
                   </div>
                   <div className="form-group mt-3 w-100">
@@ -592,7 +594,9 @@ const MyVerticallyCenteredModal = (props) => {
                       value={assignJobDetails.jobStartDate.date}
                       name="startDate"
                       placeholder="Select / Enter date in YYYY-MM-DD format"
+                      disabledDate={(current) => current && current < moment().startOf("day")}
                     />
+                    
                   </div>
 
                   {/* End Date */}
@@ -609,6 +613,7 @@ const MyVerticallyCenteredModal = (props) => {
                       value={assignJobDetails.jobEndDate.date}
                       name="startDate"
                       placeholder="Select / Enter date in YYYY-MM-DD format"
+                      disabledDate={(current) => current && current < moment().startOf("day")}
                     />
                   </div>
                 </>

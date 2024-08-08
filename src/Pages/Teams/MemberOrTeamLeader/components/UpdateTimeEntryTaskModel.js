@@ -166,13 +166,12 @@ const MyVerticallyCenteredModal = (props) => {
   );
 };
 
-export const UpdateTimeEntryModal = ({
+export const UpdateTimeEntryTaskModal = ({
   content,
   teamId,
   setIsUpdated,
   selectedIds,
 }) => {
-  console.log("mxmxmx", content);
   const [modalShow, setModalShow] = useState(false);
 
   return (

@@ -82,7 +82,8 @@ const Invoice = () => {
     totalPrice: null,
     subTotal: null,
     paymentStatus: "",
-    tax: [],
+    // tax: [],
+    tax: [taxOptions.find(option => option.value === "20")],
     note: "",
     dueAmount: 0,
     partialPaidAmount: 0,
@@ -189,7 +190,6 @@ const Invoice = () => {
 
   // preview invoice api
   const previewInvoice = async () => {
-   
     const url = invoiceMeta?.invoice_id
       ? `${mainURL}preview/invoice/${userId}/${invoiceMeta.invoice_id}`
       : `${mainURL}preview/invoice/post-draft-changes/${userId}/${invoiceMeta?.post_draft_invoice_id}`;
@@ -304,7 +304,7 @@ const Invoice = () => {
 
         const newObject = {
           servicePrice: billingRate,
-          date: result.data.invoice_data?.job_assigned_on,
+          date: result.data.invoice_data?.invoice_date,
           jobName: result.data.invoice_data?.job_name,
           description: result.data.invoice_data?.job_description,
           subTotalAmount:
@@ -752,10 +752,12 @@ const Invoice = () => {
                                 </div>
                               </div>
                             ) : (
-                              `${job.hoursTime1||0} hr ${job.minsTime1||0} min`
+                              `${job.hoursTime1 || 0} hr ${
+                                job.minsTime1 || 0
+                              } min`
                             )}
                           </td>
-                          <td>£{job.totalAmount||0}</td>
+                          <td>£{job.totalAmount || 0}</td>
                           {!isPreview ? (
                             <td>
                               <div className="d-flex justify-content-around gap-2">

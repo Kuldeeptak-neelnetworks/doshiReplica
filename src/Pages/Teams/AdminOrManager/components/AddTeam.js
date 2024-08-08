@@ -59,14 +59,21 @@ const AddTeam = () => {
   // Only users with members role with status Active & not in any team
   const membersList = onlyActiveMembersNotInATeam(initialState.membersList);
 
+
   // if team leader is selected then removing that user, and passing the rest active members in Members Options
+  
+  const member = onlyActiveMembersNotInATeam(initialState.membersList)
+  console.log(member,"member")
   const getMembersOptions = () =>
+    
     teamDetails.teamLeader !== ""
-      ? membersList.filter(
-          (member) => member.value !== teamDetails.teamLeader.value
+      ? member.filter(
+          (member) => member.value !== teamDetails.teamLeader.value&&
+        member.is_added_in_team !== "1"
         )
       : [];
 
+  
   useEffect(() => {
     setOptions((prev) => ({
       ...prev,
@@ -177,6 +184,8 @@ const AddTeam = () => {
           </div>
           <div className="form-group mt-4 w-100">
             <label htmlFor="teamLeader">Team Leader:</label>
+            {console.log("options.teamLeaderOptions",options.teamLeaderOptions)}
+            {console.log("options.teamMembersOptions",options.teamMembersOptions)}
             <Select
               closeMenuOnSelect={true}
               options={options.teamLeaderOptions}

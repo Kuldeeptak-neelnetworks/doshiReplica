@@ -52,8 +52,7 @@ const MyVerticallyCenteredModal = ({ show, onHide, userLogData }) => {
     return () => {
       setLogsToShow(() => [...initialState]);
     };
-  }, [show,initialState]);
- 
+  }, [show, initialState]);
 
   // this code is used to define the date range in Datepicker of Ant design
   const rangePresets = [
@@ -120,10 +119,13 @@ const MyVerticallyCenteredModal = ({ show, onHide, userLogData }) => {
         </form>
 
         {/* content */}
-      
+
         {logsToShow.length > 0 ? (
           <>
-            <div className="mt-3">
+            <div
+              className="mt-3"
+              style={{ height: "500px", overflowY: "auto" }}
+            >
               <ul className={styles.logsWrapper}>
                 {logsToShow.map((log, index) => (
                   <li className={styles.log} key={index}>

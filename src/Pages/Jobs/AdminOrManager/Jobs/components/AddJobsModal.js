@@ -371,6 +371,7 @@ const MyVerticallyCenteredModal = (props) => {
                   value={jobDetails.startDate.date}
                   name="startDate"
                   placeholder="Select / Enter date in YYYY-MM-DD format"
+                  // disabledDate={(current) => current && current < moment().startOf("day")}
                 />
               </div>
 

@@ -95,7 +95,7 @@ export const DeleteAssignJobModal = ({ assignJobData, setIsUpdated }) => {
       <div
         onClick={() => {
           setModalShow(true);
-          console.log("assignJobData: ", assignJobData);
+          // console.log("assignJobData: ", assignJobData);
         }}
       >
         <TrashSVG />

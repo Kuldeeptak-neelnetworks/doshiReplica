@@ -48,12 +48,11 @@ const MembersContent = ({ membersData, setIsUpdated, isLoading }) => {
     {
       Header: "Name",
       accessor: "member_name",
-      Cell :({row})=> row.original?.member_name|| "N.A"
-     },
+      Cell: ({ row }) => row.original?.member_name || "N.A",
+    },
     {
       Header: "Email ID",
       accessor: "member_email",
-      
     },
     {
       Header: "Postion",
@@ -69,8 +68,8 @@ const MembersContent = ({ membersData, setIsUpdated, isLoading }) => {
           ? "Member"
           : row.original.member_role === "team_leaders,members"
           ? "Team Leader, Member"
-           : row.original.member_role === "members,team_sub_leader" ?
-           "Member,Sub Leader"
+          : row.original.member_role === "members,team_sub_leader"
+          ? "Member,Sub Leader"
           : "";
       },
     },
@@ -175,10 +174,18 @@ const MembersContent = ({ membersData, setIsUpdated, isLoading }) => {
           ? (acc = { ...acc, operation_member: acc.operation_member + 1 })
           : curr.member_role === "team_leaders,members"
           ? (acc = { ...acc, team_leaders: acc.team_leaders + 1 })
+          : curr.member_role === "members,team_sub_leader"
+          ? (acc = { ...acc, team_sub_leaders: acc.team_sub_leaders + 1 })
           : curr.member_role === "members"
           ? (acc = { ...acc, members: acc.members + 1 })
           : acc,
-      { it_members: 0, operation_member: 0, team_leaders: 0, members: 0 }
+      {
+        it_members: 0,
+        operation_member: 0,
+        team_leaders: 0,
+        members: 0,
+        team_sub_leaders: 0,
+      }
     );
   }, [membersData]);
 
@@ -219,6 +226,12 @@ const MembersContent = ({ membersData, setIsUpdated, isLoading }) => {
         <div className="count-wrapper">
           <p className="count">{isGreaterThan10(membersCount?.team_leaders)}</p>
           <p className="role">Team Leaders</p>
+        </div>
+        <div className="count-wrapper">
+          <p className="count">
+            {isGreaterThan10(membersCount?.team_sub_leaders)}
+          </p>
+          <p className="role">Team Sub-Leaders</p>
         </div>
         <div className="count-wrapper">
           <p className="count">{isGreaterThan10(membersCount?.members)}</p>

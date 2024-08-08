@@ -127,10 +127,10 @@ const AddClientsContent = () => {
       email &&
       phone &&
       businessAddress &&
-      consultant &&
+      // consultant &&
       bpoNumber &&
-      billingRate &&
-      accountingHead;
+      billingRate
+      // accountingHead;
 
     if (bool) {
       addNewClient();
@@ -294,7 +294,7 @@ const AddClientsContent = () => {
                   name="consultant"
                   placeholder="Eg: XYZ"
                   type="text"
-                  required
+                  // required
                   value={clientDetails.consultant}
                   onChange={(e) => handleChange(e)}
                 />

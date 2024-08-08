@@ -12,7 +12,7 @@ import reportsIcon from "../../assets/images/reports-icon.svg"; // reports icon 
 import reportsIcon1 from "../../assets/images/reports-icon-1.svg"; // reports icon with circle
 import settingsIcon from "../../assets/images/settings-icon.svg"; // settings icon used in sidebar
 import settingsIcon1 from "../../assets/images/settings-icon-1.svg"; // settings icon with circle used in sidebar
-import taskImg from "../../assets/images/newTask.png"; 
+import taskImg from "../../assets/images/newTask.png";
 import emailIcon from "../../assets/images/email-icon.svg"; // email icon
 import passwordIcon from "../../assets/images/lock-svg.svg"; // lock icon
 import editIcon from "../../assets/images/edit-icon.svg"; // edit icon without circle
@@ -51,7 +51,7 @@ import invoiceIcon1 from "../../assets/images/invoice-icon-1.svg"; // invoice ic
 
 import infoIcon from "../../assets/images/info-icon.svg"; // info icon with circle
 import employeeIcon from "../../assets/images/UsersThree.svg";
-
+import markIcon from "../../assets/images/Mark.svg"
 
 export {
   loginLogo,
@@ -78,6 +78,7 @@ export {
   taskImg,
   clientsIcon,
   clientsIcon1,
+  markIcon,
   userIcon,
   userIcon1,
   usersIcon,
@@ -93,7 +94,8 @@ export {
   invoiceIcon,
   invoiceIcon1,
   infoIcon,
-  employeeIcon,unauthorized
+  employeeIcon,
+  unauthorized,
 };
 
 export const DownloadSVG = () => {
@@ -164,14 +166,50 @@ export const MailIconWithCircle = () => {
   );
 };
 
-export const DownSVG=()=>{
+export const DownSVG = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="34"
+      height="34"
+      viewBox="0 0 34 34"
+      fill="none"
+    >
+      <path
+        d="M33.6 16.8684C33.6 26.0467 26.1015 33.4884 16.85 33.4884C7.5985 33.4884 0.1 26.0467 0.1 16.8684C0.1 7.69019 7.5985 0.248438 16.85 0.248438C26.1015 0.248438 33.6 7.69019 33.6 16.8684Z"
+        fill="white"
+        stroke="#00263D"
+        stroke-width="0.2"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M9.97725 14.3523C10.1969 14.1326 10.5531 14.1326 10.7727 14.3523L16 19.5795L21.2273 14.3523C21.4469 14.1326 21.8031 14.1326 22.0227 14.3523C22.2424 14.5719 22.2424 14.9281 22.0227 15.1477L16.3977 20.7727C16.1781 20.9924 15.8219 20.9924 15.6023 20.7727L9.97725 15.1477C9.75758 14.9281 9.75758 14.5719 9.97725 14.3523Z"
+        fill="#00263D"
+      />
+    </svg>
+  );
+};
+export const CheckMarkSVG=()=>{
   return(
-    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
-<path d="M33.6 16.8684C33.6 26.0467 26.1015 33.4884 16.85 33.4884C7.5985 33.4884 0.1 26.0467 0.1 16.8684C0.1 7.69019 7.5985 0.248438 16.85 0.248438C26.1015 0.248438 33.6 7.69019 33.6 16.8684Z" fill="white" stroke="#00263D" stroke-width="0.2"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M9.97725 14.3523C10.1969 14.1326 10.5531 14.1326 10.7727 14.3523L16 19.5795L21.2273 14.3523C21.4469 14.1326 21.8031 14.1326 22.0227 14.3523C22.2424 14.5719 22.2424 14.9281 22.0227 15.1477L16.3977 20.7727C16.1781 20.9924 15.8219 20.9924 15.6023 20.7727L9.97725 15.1477C9.75758 14.9281 9.75758 14.5719 9.97725 14.3523Z" fill="#00263D"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
+<path d="M33.6 16.72C33.6 25.8982 26.1015 33.34 16.85 33.34C7.5985 33.34 0.1 25.8982 0.1 16.72C0.1 7.54176 7.5985 0.1 16.85 0.1C26.1015 0.1 33.6 7.54176 33.6 16.72Z" fill="white" stroke="#00263D" stroke-width="0.2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M21.8536 12.1464C22.0488 12.3417 22.0488 12.6583 21.8536 12.8536L12.8536 21.8536C12.6583 22.0488 12.3417 22.0488 12.1464 21.8536C11.9512 21.6583 11.9512 21.3417 12.1464 21.1464L21.1464 12.1464C21.3417 11.9512 21.6583 11.9512 21.8536 12.1464Z" fill="#00263D"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12.1464 12.1464C12.3417 11.9512 12.6583 11.9512 12.8536 12.1464L21.8536 21.1464C22.0488 21.3417 22.0488 21.6583 21.8536 21.8536C21.6583 22.0488 21.3417 22.0488 21.1464 21.8536L12.1464 12.8536C11.9512 12.6583 11.9512 12.3417 12.1464 12.1464Z" fill="#00263D"/>
 </svg>
   )
 }
+
+export const MarkSVG = () => {
+  return(  
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
+<rect width="33.6975" height="33.4394" fill="white"/>
+<path d="M33.5975 16.7197C33.5975 25.8978 26.0996 33.3394 16.8488 33.3394C7.59795 33.3394 0.1 25.8978 0.1 16.7197C0.1 7.54161 7.59795 0.1 16.8488 0.1C26.0996 0.1 33.5975 7.54161 33.5975 16.7197Z" fill="white" stroke="#00263D" stroke-width="0.2"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23.5852 12.6648C23.8049 12.8844 23.8049 13.2406 23.5852 13.4602L15.7102 21.3352C15.4906 21.5549 15.1344 21.5549 14.9148 21.3352L10.9773 17.3977C10.7576 17.1781 10.7576 16.8219 10.9773 16.6023C11.1969 16.3826 11.5531 16.3826 11.7727 16.6023L15.3125 20.142L22.7898 12.6648C23.0094 12.4451 23.3656 12.4451 23.5852 12.6648Z" fill="#00263D"/>
+</svg>
+  )
+
+};
 export const EyeIconWithCircle = () => {
   return (
     <svg

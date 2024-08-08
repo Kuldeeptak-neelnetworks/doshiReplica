@@ -90,7 +90,7 @@ const AdminOrManagerLogs = () => {
       accessor: "role",
     },
     {
-      Header: "Edit",
+      Header: "Action",
       Cell: ({ row }) => (
         <>
           <Tooltip

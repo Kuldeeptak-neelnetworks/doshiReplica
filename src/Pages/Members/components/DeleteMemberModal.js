@@ -75,21 +75,25 @@ const MyVerticallyCenteredModal = (props) => {
         >
           <div className="form-group mt-2 w-100">
             <p className="text-center fs-5 w-100 m-auto">
-              are you sure you want to delete ,
-             {props?.memberdata?.member_name}?
+              Are you sure you want to delete ,{props?.memberdata?.member_name}?
             </p>
-            <p className="text-center fs-6 w-100 m-auto"> <b>"When you delete a member, their assigned jobs, time entries, removal from the team, and user logs will be deleted along with them".</b></p>
+            <p className="text-center fs-6 w-100 m-auto">
+              {" "}
+              <b>
+                "When you delete a member, their assigned jobs, time entries,
+                removal from the team, and user logs will be deleted along with
+                them".
+              </b>
+            </p>
           </div>
           <button type="submit" className="custom-btn mt-4">
             {isUserValid ? <SpinningLoader /> : "Delete"}
           </button>
-   
         </form>
       </Modal.Body>
     </Modal>
   );
 };
-
 
 export const DeleteMemberModal = ({ memberData, setIsUpdated }) => {
   const [modalShow, setModalShow] = useState(false);

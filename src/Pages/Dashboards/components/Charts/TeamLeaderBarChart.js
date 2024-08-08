@@ -59,7 +59,7 @@ const TeamLeaderBarChart = () => {
         backgroundColor: "#dc8400",
       },
       {
-        label: "Complated Job", 
+        label: "Completed Job", 
         data: statisticDataList.map((item) => item.data.total_completed_jobs), // on y axis
         backgroundColor: "#0f5e0f",
         // backgroundColor: "green",

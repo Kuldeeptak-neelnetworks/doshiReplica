@@ -16,6 +16,7 @@ import {
 import { ReactHotToast } from "../../../../../Components/ReactHotToast/ReactHotToast";
 // import TimePickerSection from "./TimePickerSection";
 import TimePickerSection from "../../../MemberOrTeamLeaderJobs/JobEntry/Components/TimePickerSection";
+import moment from "moment";
 
 const MyVerticallyCenteredModal = (props) => {
   const {
@@ -66,6 +67,14 @@ const MyVerticallyCenteredModal = (props) => {
 
     setEntryDetails((prev) => ({ ...prev, employeeOptions: options }));
   }, [initialState.membersList]);
+  console.log("initialState.membersList",initialState.membersList)
+
+
+
+
+
+
+  
 
   const handleEntryAs = (e) => {
     setEntryDetails((prev) => ({
@@ -117,19 +126,23 @@ const MyVerticallyCenteredModal = (props) => {
     }));
   };
 
+
+
   const handleClear = () => {
-    setEntryDetails({
+    setEntryDetails((prev) => ({
+      ...prev,
       entryDuration: "",
       entryDescription: "",
       job: "",
       employee: "",
       entryAs: "",
-      teamId: "",
+      teamId: "", 
       jobOptions: [],
-      employeeOptions: [],
+      // employeeOptions: [],
       entryDate: new Date(),
-    });
+    }));
   };
+  
 
   // for adding a new entry via Admin / Manager api
   const addTimeEntry = async () => {
@@ -322,7 +335,8 @@ const MyVerticallyCenteredModal = (props) => {
               placeholder="Select / Enter date in YYYY-MM-DD format"
               value={entryDetails.entryDate.date}
               name="billingRates"
-              disabledDate={(current) => presentDate() < new Date(current)}
+              // disabledDate={(current) => presentDate() < new Date(current)}
+              disabledDate={(current) => current && current < moment().startOf("day")}
             />
           </div>
 

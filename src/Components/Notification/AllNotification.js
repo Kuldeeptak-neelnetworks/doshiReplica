@@ -30,7 +30,6 @@ export const GetAllNotifications = ({}) => {
   });
 
   const notifications = async (page) => {
-    console.log(page, "pagepagepage");
     const userId = localStorage.getItem("userId") ?? null;
     const url = `${mainURL}get/my-notification/${userId}?page=${page}`;
 
@@ -164,9 +163,9 @@ export const GetAllNotifications = ({}) => {
               <p className="m-0 fs-4">All Notifications</p>
             </div>
           </section>
-        {console.log(notification.length)}
+     
           <div>
-            {console.log(notification, "notification")}
+          
             <div className="main-header mt-5 ">
             {notification.filter((a) => a.is_view === "no").length === 0 ? (
                 ""
@@ -177,7 +176,7 @@ export const GetAllNotifications = ({}) => {
                 >
                   <div className="mb-5">
                     <input
-                  id="markAll"
+                     id="markAll"
                       type="checkbox"
                       onChange={toggleMarkAll}
                       checked={markAllChecked}

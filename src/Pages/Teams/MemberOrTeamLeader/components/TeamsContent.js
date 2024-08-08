@@ -36,39 +36,6 @@ const TeamsContent = ({
   const userRole = localStorage.getItem("userRole");
   const [currentRow, setCurrentRow] = useState("");
 
-  // const AccordionComponent = ({ content }) => {
-  //   const [isOpen, setIsOpen] = useState(false);
-
-  //   const toggleAccordion = () => {
-  //     setIsOpen(!isOpen);
-  //   };
-
-  //   return (
-  //     <div className="accordion">
-  //       <div className="accordion-header" onClick={toggleAccordion}>
-  //         {isOpen ? (
-  //           <BsChevronUp className="accordion-icon" />
-  //         ) : (
-  //           <BsChevronDown className="accordion-icon" />
-  //         )}
-  //       </div>
-  //       {isOpen && (
-  //         <div className="accordion-content">
-  //           {content.map((entry, index) => (
-  //             <div key={index}>
-  //               <p>Working Time: {entry.working_time}</p>
-  //               <p>Billing Rates: {entry.billing_rates}</p>
-  //               <p>Job Description: {entry.job_description}</p>
-  //               <p>Task ID: {entry.task_id}</p>
-  //               <p>Adjustment Hours: {entry.adjustment_hours}</p>
-  //               <p>Time Entries Type: {entry.time_entries_type}</p>
-  //             </div>
-  //           ))}
-  //         </div>
-  //       )}
-  //     </div>
-  //   );
-  // };
 
   // helper function for converting the member names array
   const getMembersNames = (dataset) => {
@@ -131,10 +98,11 @@ const TeamsContent = ({
     }
   }, [statusFilter, teamData]);
   
- 
+
 
   // Table code
   const tableColumns = [
+    
     {
       Header: "Sr no.",
       accessor: "sr no.",
@@ -145,13 +113,13 @@ const TeamsContent = ({
       accessor: "job_code ",
       Cell: ({ row }) => row.original?.job_code || "N.A",
     },
- 
-  
     {
       Header: "Task Name",
       accessor: "task_name",
       Cell: ({ row }) => row.original?.task_name || "N.A",
+  
     },
+  
     {
       Header: "Assigned on",
       accessor: "assigned_on",
@@ -172,28 +140,11 @@ const TeamsContent = ({
       accessor: "total_billable_hours",
       Cell: ({ row }) => row.original?.total_billable_hours || "N.A",
     },
-    // {
-    //   Header: "Job Description",
-    //   accessor: "job_description",
-
-    //   Cell: ({ row }) => (
-    //     <button onClick={()=>{
-    //       setCurrentRow((prev) => {
-    //         if(prev === row.original.task_id){
-    //           return "";
-    //         }else{
-    //          return row.original.task_id;
-    //         }
-    //       })
-
-    //     }}>Open</button>
-    //   ),
-    // },
-
-    // {
-    //   Header: "Status",
-    //   accessor: "job_status",
-    // },
+    {
+      Header: "Approved Hours",
+      accessor: "total_approved_hours",
+      Cell: ({ row }) => row.original?.total_approved_hours || "N.A",
+    },
     {
       Header: "Status",
       accessor: "job_status",
@@ -267,6 +218,9 @@ const TeamsContent = ({
         </div>
       ),
     },
+
+
+
   ];
 
   const columnHeaders = [
@@ -277,6 +231,7 @@ const TeamsContent = ({
     "Due Date",
     "Job Description",
     "Status",
+    "Entered By"
   ];
 
   const columns = useMemo(() => tableColumns, []);
@@ -299,6 +254,7 @@ const TeamsContent = ({
       { label: "Due Date", key: "due_on" },
       { label: "Job Description", key: "job_description" },
       { label: "Status", key: "job_status" },
+      { label: "Entered By", key: "entered_by" },
     ],
     fileName: "Team Data",
   };
@@ -384,7 +340,7 @@ const TeamsContent = ({
 
       {userRole === "team_leaders,members" || userRole === "members" ||userRole === "members,team_sub_leader" ? (
         <>
-        {console.log(teamJobs.length)}
+      
         
           {isLoading ? (
             <ReactTableSkeleton columnHeaders={columnHeaders} />

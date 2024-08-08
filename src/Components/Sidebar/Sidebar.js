@@ -329,9 +329,7 @@ const Sidebar = () => {
             )}
 
             {(userDetails?.member_role === "it_member" ||
-
-
-              userDetails?.member_role === "operation_member" ||  userDetails?.member_role === "members,team_sub_leader" ||
+               userDetails?.member_role === "operation_member" ||  userDetails?.member_role === "members,team_sub_leader" ||
               userDetails?.member_role === "team_leaders,members") && (
               <li>
                 <NavLink

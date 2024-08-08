@@ -35,7 +35,7 @@ const TeamsContent = ({ teamsData, setIsUpdated, isLoading }) => {
       pageURL: "/teams",
     },
   ];
-
+ 
   const tableColumns = [
     {
       Header: "Sr no.",
@@ -63,6 +63,7 @@ const TeamsContent = ({ teamsData, setIsUpdated, isLoading }) => {
         );
       },
     },
+
     {
       Header: "Members Count",
       accessor: "member_count",

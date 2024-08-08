@@ -112,6 +112,28 @@ const AssignJobsContent = ({ setIsUpdated, isLoading }) => {
         );
       },
     },
+    // {
+    //   Header: "Status",
+    //   accessor: "job_status",
+    //   Cell: ({ row }) => {
+    //     return (
+    //       <div className="d-flex justify-content-center align-items-center">
+    //         <Stack direction="horizontal">
+    //           {row.original.job_status === "Completed" ? (
+    //             <Badge bg="success">Completed</Badge>
+    //           ) : row.original.job_status === "On Hold" ? (
+    //             <Badge bg="danger">On Hold</Badge>
+    //           ) : row.original.job_status === "Pending" ? (
+    //             <Badge bg="danger">Pending</Badge>
+    //           ) : row.original.job_status === "In Progress" (
+    //             <Badge bg="warning"> In Progress</Badge>
+              
+    //           )}
+    //         </Stack>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       Header: "Status",
       accessor: "job_status",
@@ -125,18 +147,35 @@ const AssignJobsContent = ({ setIsUpdated, isLoading }) => {
                 <Badge bg="danger">On Hold</Badge>
               ) : row.original.job_status === "Pending" ? (
                 <Badge bg="danger">Pending</Badge>
-              ) : row.original.job_status === "On Hold" ? (
-                <Badge bg="danger">On Hold</Badge>
+              ) : row.original.job_status === "In Progress" ? (
+                <Badge bg="warning"  text="dark">In Progress</Badge>
+              ) : null 
+              }
+            </Stack>
+          </div>
+        );
+      },
+    },
+    
+    {
+      Header: "Approved Time",
+      accessor: "approved_time",
+      Cell: ({ row }) => {
+        return (
+          <div className="d-flex justify-content-center align-items-center">
+            <Stack direction="horizontal">
+              {row.original.approved_time === "yes" ? (
+                <Badge bg="success">Yes</Badge>
               ) : (
-                <Badge bg="warning" text="dark">
-                  In Progress
-                </Badge>
+                <Badge bg="danger">No</Badge>
               )}
             </Stack>
           </div>
         );
       },
     },
+    
+
     {
       Header: "Description",
       accessor: "job_description",

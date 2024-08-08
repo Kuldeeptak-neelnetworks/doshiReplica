@@ -152,7 +152,7 @@ function App() {
 
             <Route path="/invoice" element={<Invoice />} />
 
-            <Route path="/generateInvoice" element={<GenerateInvoice />} />
+            {/* <Route path="/generateInvoice" element={<GenerateInvoice />} /> */}
           </Route>
           <Route path="/reports/memberList" element={<GetAllMembers />} />
 

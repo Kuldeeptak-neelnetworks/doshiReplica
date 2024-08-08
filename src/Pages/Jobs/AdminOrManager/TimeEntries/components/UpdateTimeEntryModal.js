@@ -77,19 +77,31 @@ const MyVerticallyCenteredModal = (props) => {
     try {
       let body = {
         current_user: localStorage.getItem("userId") ?? null,
-        task_id: props?.timeEntryData?.task_id,
-        entry_id: props?.timeEntryData?.entries_id,
+        task_id: props?.timeEntryData?.task_id || props?.taskId,
+        entry_id: props?.timeEntryData?.entries_id || props?.timeEntryId,
         entries_updated_as:
-          props?.timeEntryData?.entries_as === "team" ? "Team" : "Member",
-        is_approve: timeEntry.approval.value,
-      };
-
+        props?.timeEntryData?.entries_as === "team" ? "Team" :
+        props?.timeEntryData?.entries_as === "member" ? "Member" : "Team",
+          is_approve: timeEntry?.approval?.value,
+      }
+      
       if (timeEntry.approval.value === "no") {
         body.disapproval_note = timeEntry.rejectionNote;
       }
-      if (props?.timeEntryData?.entries_as === "team") {
-        body.team_id = props?.timeEntryData?.team_id;
-      }
+      body.team_id =
+        props?.timeEntryData?.entries_as === "team"
+          ? props?.timeEntryData?.team_id
+          :props?.teamId;
+
+      //  entries_updated_as:
+      //     props?.timeEntryData?.entries_as === "team" ? "Team" : "Member",
+      //   is_approve: timeEntry.approval.value,
+      // };
+      // }
+
+      // if (props?.timeEntryData?.entries_as === "team") {
+      //   body.team_id = props?.timeEntryData?.team_id;
+      // }
       if (timeEntry.addAdjustmentHours) {
         body.adjustment_hours = `${timeEntry.adjustmentType}${timeEntry.adjustmentHours.hours}:${timeEntry.adjustmentHours.mins}:00`;
         body.adjustment_hours_reason = timeEntry.adjustmentHoursNote;
@@ -261,7 +273,7 @@ const MyVerticallyCenteredModal = (props) => {
                 </div>
                 <div className="form-group mt-3 w-100">
                   <label htmlFor="rejectionNote">
-                  Adjustment Hours (hrs:mins):
+                    Adjustment Hours (hrs:mins):
                   </label>
                   <div className="d-flex gap-2">
                     <input
@@ -299,7 +311,7 @@ const MyVerticallyCenteredModal = (props) => {
                 </div>
                 <div className="form-group mt-3 w-100">
                   <label htmlFor="adjustmentHoursNote">
-                  Adjustment Hours Reason:
+                    Adjustment Hours Reason:
                   </label>
                   <textarea
                     id="adjustmentHoursNote"
@@ -348,9 +360,14 @@ const MyVerticallyCenteredModal = (props) => {
   );
 };
 
-export const UpdateTimeEntryModal = ({ setIsUpdated, timeEntryData }) => {
+export const UpdateTimeEntryModal = ({
+  setIsUpdated,
+  timeEntryData,
+  timeEntryId,
+  teamId,
+  taskId,
+}) => {
   const [modalShow, setModalShow] = useState(false);
-
   return (
     <>
       <div
@@ -366,6 +383,9 @@ export const UpdateTimeEntryModal = ({ setIsUpdated, timeEntryData }) => {
         onHide={() => setModalShow(false)}
         setIsUpdated={setIsUpdated}
         timeEntryData={timeEntryData}
+        timeEntryId={timeEntryId}
+        teamId={teamId}
+        taskId={taskId}
       />
     </>
   );

@@ -37,7 +37,7 @@ const PageHeader = ({
           !job.taskAssignId ||
           !job.description ||
           !job.totalTime ||
-          !job.totalAmount || 
+          !job.totalAmount ||
           !job.billingRate
       );
 
@@ -77,11 +77,11 @@ const PageHeader = ({
         job_description: job.description,
         total_time: job.totalTime,
         total_amount: job.totalAmount,
-        billing_rates:job.billingRate
+        billing_rates: job.billingRate,
       }));
 
       const body = {
-        billing_rates:+invoice?.servicePrice,
+        billing_rates: +invoice?.servicePrice,
         partial_amount: +invoice?.clientHasPaid,
         current_user: +userId,
         job_assignment_id: +assignId,
@@ -151,8 +151,6 @@ const PageHeader = ({
               </button>
             )}
 
-       
-
         {isPreview ? (
           <>
             {invoice.isInvoiceGenerated
@@ -167,12 +165,16 @@ const PageHeader = ({
                   </button>
                 )}
 
-            <SendInvoiceModal
-              assignId={assignId}
-              invoiceId={invoiceMeta?.invoice_id}
-              invoice={invoice}
-              data={invoice}
-            />
+            {invoice.isInvoiceGenerated ? (
+              <SendInvoiceModal
+                assignId={assignId}
+                invoiceId={invoiceMeta?.invoice_id}
+                invoice={invoice}
+                data={invoice}
+              />
+            ) : (
+              ""
+            )}
           </>
         ) : null}
       </div>

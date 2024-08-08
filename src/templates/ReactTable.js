@@ -84,7 +84,7 @@ const ReactTable = ({ tableInstance, currentRow, setIsUpdated }) => {
               {row.original.task_id && row.original.task_id === currentRow ? (
                 <tr>
                   {userRole === "team_leaders,members" || userRole === "members,team_sub_leader" ? (
-                    <td colSpan={8}>
+                    <td colSpan={9}>
                       <AccordionComponent
                         setIsUpdated={setIsUpdated}
                         content={row.original.time_entries_for_task}

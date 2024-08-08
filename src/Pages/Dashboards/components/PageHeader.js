@@ -39,27 +39,29 @@ const PageHeader = ({ title }) => {
   }, []);
 
   const handleProjectCountList = async () => {
-    if (userRole === localStorage.getItem("userRole")) {
-      let url;
-      if (userRole === "team_leaders,members") {
-        url = `${mainURL}dashboard/project-count-for-team-leader/${userId}`;
-      } else {
-        url = `${mainURL}dashboard/project-count/${userId}`;
-      }
-
-      try {
-        const result = await axios.get(url, { headers: headerOptions() });
-        const projectCountData = result?.data?.total_assign_job_count || {};
-        setProjectCountList({
-          inProgressJobs: projectCountData.in_progress_jobs || 0,
-          totalCompletedJobs: projectCountData.total_completed_jobs || 0,
-          onHoldJobs: projectCountData.on_hold_jobs || 0,
-          totalAssignJobs: projectCountData.total_assign_jobs || 0,
-        });
-      } catch (error) {
-        console.error("Error fetching project Count:", error);
-      }
+    const userRole = localStorage.getItem("userRole");
+    if (userRole === "members") {
+      return;
     }
+
+    const url =
+      userRole === "team_leaders,members"
+        ? `${mainURL}dashboard/project-count-for-team-leader/${userId}`
+        : `${mainURL}dashboard/project-count/${userId}`;
+
+    try {
+      const result = await axios.get(url, { headers: headerOptions() });
+      const projectCountData = result?.data?.total_assign_job_count || {};
+      setProjectCountList({
+        inProgressJobs: projectCountData.in_progress_jobs || 0,
+        totalCompletedJobs: projectCountData.total_completed_jobs || 0,
+        onHoldJobs: projectCountData.on_hold_jobs || 0,
+        totalAssignJobs: projectCountData.total_assign_jobs || 0,
+      });
+    } catch (error) {
+      console.error("Error fetching project Count:", error);
+    }
+
   };
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const PageHeader = ({ title }) => {
 
   return (
     <>
-   {userRole === "members" ? (
+      {userRole === "members" || userRole === "members,team_sub_leader" ? (
         ""
       ) : (
         <section className="main-content_header sticky_header">
@@ -81,35 +83,41 @@ const PageHeader = ({ title }) => {
               {message} {localStorage.getItem("username")}!
             </p>
             <div className="projects-summary d-flex justify-content-center align-items-center gap-3">
-            <div className="summary-box"style={{background:"#319cd1"}}  >
+              <div className="summary-box" style={{ background: "#319cd1" }}>
                 <p className="m-0 text-center d-flex flex-row justify-content-center align-items-center gap-1 ">
-                  <span style={{color:"#fff",fontSize:"16px"}}>Assigned</span>
+                  <span style={{ color: "#fff", fontSize: "16px" }}>
+                    Assigned
+                  </span>
                   <span className="job">{totalAssignJobs}</span>
                   {/* <span className="fs-5 mt-2">{totalAssignJobs}</span> */}
                 </p>
               </div>
-              <div className="summary-box "style={{background:"#0f5e0f"}} >
+              <div className="summary-box " style={{ background: "#0f5e0f" }}>
                 <p className="m-0  text-center d-flex flex-row justify-content-center align-items-center gap-1 ">
-                  <span  style={{color:"#fff",fontSize:"16px"}}>Completed</span>
+                  <span style={{ color: "#fff", fontSize: "16px" }}>
+                    Completed
+                  </span>
                   <span className="job">{totalCompletedJobs}</span>
                   {/* <span className="fs-5 mt-2">{totalCompletedJobs}</span> */}
                 </p>
               </div>
-              <div className="summary-box"style={{background:"#dc8400"}}  >
+              <div className="summary-box" style={{ background: "#dc8400" }}>
                 <p className="m-0  text-center d-flex flex-row justify-content-center align-items-center gap-1 ">
-                  <span  style={{color:"#fff",fontSize:"16px"}}>In Progress</span>
+                  <span style={{ color: "#fff", fontSize: "16px" }}>
+                    In Progress
+                  </span>
                   <span className="job">{inProgressJobs}</span>
                   {/* <span className="fs-5 mt-2">{inProgressJobs}</span> */}
                 </p>
               </div>
-          
-              <div className="summary-box"style={{background:"#9f1c20"}} >
+
+              <div className="summary-box" style={{ background: "#9f1c20" }}>
                 <p className="m-0  text-center d-flex flex-row justify-content-center align-items-center gap-1 ">
-                  <span  style={{color:"#fff",fontSize:"16px"}}>On Hold</span>
+                  <span style={{ color: "#fff", fontSize: "16px" }}>
+                    On Hold
+                  </span>
                   <span className="job">{onHoldJobs}</span>
                   {/* <span className="fs-5 mt-2">{onHoldJobs}</span> */}
-              
-               
                 </p>
               </div>
             </div>

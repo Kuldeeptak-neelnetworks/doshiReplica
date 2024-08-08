@@ -301,7 +301,6 @@ export const MemberTimeEntriesModal = ({ memberUserId, setIsUpdated }) => {
 
       if (result.status === 200) {
         setMemberTimeEntries(result.data.time_sheet);
-        console.log(result.data.time_sheet, "result.dataresult.data");
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {

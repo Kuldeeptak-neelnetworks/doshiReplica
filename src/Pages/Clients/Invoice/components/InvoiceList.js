@@ -11,7 +11,7 @@ import {
 import Badge from "react-bootstrap/Badge";
 import Stack from "react-bootstrap/Stack";
 import { ContextSidebarToggler } from "../../../../Context/SidebarToggler/SidebarToggler";
-
+import { ReactHotToast } from "../../../../Components/ReactHotToast/ReactHotToast";
 import {
   InvoiceIcon,
   MailIconSVG,
@@ -27,11 +27,17 @@ import Breadcrumbs from "../../../../templates/Breadcrumbs";
 import ReactTableSkeleton from "../../../../templates/ReactTableSkeleton";
 
 import { formatDate } from "../../../../utils/utilities/utilityFunctions";
-// import { formatDate } from "../../../../../utils/utilities/utilityFunctions";
+
 import { ContextAPI } from "../../../../Context/ApiContext/ApiContext";
 import InvoiceListTable from "./InvoiceListTable";
-
-import { DeleteAssignJobModal } from "../../../Jobs/AdminOrManager/AssignJobs/components/DeleteAssignJobModal";
+import axios from "axios";
+// import styles from "./Invoices.module.css";
+import styles from "../../../../Pages/Invoices/Invoices.module.css";
+import {
+  handleAPIError,
+  headerOptions,
+} from "../../../../utils/utilities/utilityFunctions";
+import { MarkInvoiceModel } from "./MarkInvoiceModel";
 
 const InvoiceList = ({ setIsUpdated, isLoading }) => {
   const navigate = useNavigate();
@@ -54,8 +60,9 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
     { label: "Individual", value: "Individual" },
     { label: "Team", value: "Team" },
   ];
+
   useEffect(() => {
-    setInvoice(initialState.getAllInvoice);
+    setInvoice(initialState.getAllInvoice || []);
   }, [initialState.getAllInvoice]);
 
   useEffect(() => {
@@ -67,6 +74,38 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
     });
     setInvoice(filterByStatus || []);
   }, [filters, initialState?.getAllInvoice]);
+  const { mainURL } = useContext(ContextAPI);
+
+  // const [showUpdateButton, setShowUpdateButton] = useState(false);
+
+  // const handleUpdateStatus = async (id) => {
+  //   try {
+  //     const userId = localStorage.getItem("userId");
+
+  //     const url = `${mainURL}update/invoice/${userId}/${id}/3`;
+  //     const result = await axios.put(url, {}, { headers: headerOptions() });
+
+  //     if (result.status === 200) {
+  //       ReactHotToast(result.data.message, "success");
+  //       setIsUpdated((prev) => !prev);
+  //     }
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 401) {
+  //       // navigate("/unauthorized");
+  //       ReactHotToast("Unauthorized access.");
+  //     }
+  //   }
+  // };
+
+  // const handleUpdateStatus = (e) => {
+
+  //   updatePaymentStatus();
+  // };
+  // const toggleIndividualCheckbox = (index) => {
+  //   const updatedInvoices = [...invoice];
+  //   updatedInvoices[index].isChecked = !updatedInvoices[index].isChecked;
+  //   setInvoice(updatedInvoices);
+  // };
 
   const breadCrumbs = [
     {
@@ -84,9 +123,33 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
   ];
 
   const tableColumns = [
+    // {
+    //   Header: "Mark",
+    //   accessor: "invoice_containt",
+    //   Cell: ({ row }) => {
+    //     const paymentStatus = JSON.parse(row.original.invoice_containt).payment_status;
+    //     const isChecked = row.original.isChecked ?? false;
+
+    //     if (paymentStatus === "1") {
+    //       return (
+    //         <div>
+    //           <input
+    //             id={`checkbox-${row.id}`}
+    //             type="checkbox"
+    //             onChange={() => toggleIndividualCheckbox(row.index)}
+    //             checked={isChecked}
+    //           />
+    //         </div>
+    //       );
+    //     } else {
+    //       return null;
+    //     }
+    //   },
+    // },
     {
       Header: "Sr no.",
       accessor: "sr no.",
+      enableHiding: false,
       Cell: ({ row }) => row.index + 1,
     },
     {
@@ -107,11 +170,9 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
               {paymentStatus === "1" ? (
                 <Badge bg="danger">Unpaid</Badge>
               ) : paymentStatus === "2" ? (
-                <Badge bg="success">Partially Paid</Badge>
+                <Badge bg="warning">Partially Paid</Badge>
               ) : paymentStatus === "3" ? (
-                <Badge bg="warning" text="dark">
-                  Paid
-                </Badge>
+                <Badge bg="success">Paid</Badge>
               ) : null}
             </Stack>
           </div>
@@ -211,6 +272,35 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
         </div>
       ),
     },
+
+    {
+      Header: "Action",
+      accessor: "invoice_containt",
+      Cell: ({ row }) => {
+        const paymentStatus = JSON.parse(
+          row.original.invoice_containt
+        ).payment_status;
+
+        if (paymentStatus === "1") {
+          return (
+            <div className="d-flex justify-content-center cursor-pointer">
+              {/* <button
+                className="custom-btn"
+                onClick={() => handleUpdateStatus(row.original.id)}
+              >
+              Mark
+              </button> */}
+              <MarkInvoiceModel
+                invoiceData={row.original}
+                setIsUpdated={setIsUpdated}
+              />
+            </div>
+          );
+        } else {
+          return null;
+        }
+      },
+    },
   ];
 
   const columnHeaders = [
@@ -220,6 +310,7 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
     "Generated by",
     "Issued on",
     "Edit",
+    "Action",
   ];
 
   const columns = useMemo(() => tableColumns, []);
@@ -227,6 +318,9 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
 
   const tableInstance = useTable(
     {
+      initialState: {
+        hiddenColumns: ["Action"],
+      },
       columns,
       data,
     },
@@ -281,6 +375,13 @@ const InvoiceList = ({ setIsUpdated, isLoading }) => {
           />
         </div>
       </div>
+      {/* <div className="d-flex justify-content-start align-items-center">
+        {showUpdateButton && (
+        <button onClick={handleUpdateStatus} className="custom-btn">
+          Update
+        </button>
+    )} 
+      </div> */}
 
       {/* Assign Jobs list Table */}
       {isLoading ? (

@@ -139,7 +139,7 @@ const MemberOrTeamLeaderLogs = () => {
 
         {/* content */}
         {logsToShow.length > 0 ? (
-          <div className="mt-3">
+          <div className="mt-3" style={{overflowY:"auto",maxHeight:"540px"}}>
             <ul className={styles.logsWrapper}>
               {logsToShow.map((log, index) => (
                 <li className={styles.log} key={index}>

@@ -1,6 +1,5 @@
-
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { json, useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import axios from "axios";
@@ -30,7 +29,6 @@ const ManageTeam = () => {
   const { teamData } = location.state ?? "";
 
   const navigate = useNavigate();
-console.log(teamData,"getAllMembers")
   const statusOptions = [
     { value: "active", label: "Active" },
     { value: "inactive", label: "Inactive" },
@@ -50,29 +48,28 @@ console.log(teamData,"getAllMembers")
       pageURL: "/teams/manage-team",
     },
   ];
-console.log(teamData,"teamDatateamData")
   const [isLoading, setIsLoading] = useState(false);
   const [updatedTeamData, setUpdatedTeamData] = useState({
-    teamName: teamData?.team_name,
-    teamCode: teamData?.team_code,
+    teamName: teamData?.team_name || "",
+    teamCode: teamData?.team_code || "",
     teamLeader: "",
-    teamSubLeader: "",
-    teamSubLeader2:teamData?.team_sub_leader,
-    teamLeaderEmail:teamData?.leader_email,
-    teamMembersCount: teamData?.member_count,
+    teamSubLeader: [],
+    teamSubLeaderName: teamData?.team_sub_leader,
+    teamLeaderEmail: teamData?.leader_email || "",
+    teamMembersCount: teamData?.member_count || 0,
     teamMembersName: [],
-    teamStatus: teamData?.status,
+    teamStatus: teamData?.status || "",
     jobs:
       teamData?.assigned_jobs_list?.length > 0
         ? teamData?.assigned_jobs_list
         : [],
     selectedJob: null,
   });
+
   const [projectOptions, setProjectOptions] = useState([]);
   const [membersOptions, setMembersOptions] = useState([]); // only responsible for maintaining track of members dropdown options
   const [teamLeaderOptions, setTeamLeaderOptions] = useState([]); // only responsible for maintaining track of team leader dropdown options
-  const [teamSubLeaderOptions, setTeamSubLeaderOptions] = useState([]); // only responsible for maintaining track of team leader dropdown options
-
+  const [teamSubLeaderOptions, setTeamSubLeaderOptions] = useState(); // only responsible for maintaining track of team leader dropdown options
 
   useEffect(() => {
     setProjectOptions(() =>
@@ -87,19 +84,17 @@ console.log(teamData,"teamDatateamData")
   useEffect(() => {
     getAllMembers();
   }, []);
- 
+
   const getJobDetails = () => {
     return updatedTeamData?.jobs?.find(
       (job) => job?.task_id === updatedTeamData?.selectedJob?.value
     );
   };
 
-
-console.log(updatedTeamData,"gjhfjghdjfhgjdfhkgjhfdjg")
-
   // If user role is "member" OR "Team Leader but only from this same team then OK"
   const condition1 = (user) =>
     user.member_role === "members" ||
+    user.member_role === "members,team_sub_leader" ||
     (user.member_role === "team_leaders,members" &&
       teamData.team_leader === user.member_id);
 
@@ -111,27 +106,40 @@ console.log(updatedTeamData,"gjhfjghdjfhgjdfhkgjhfdjg")
   // "If member is assigned a Team" AND "member is a part of this Team"
   const condition3 = (user) =>
     user.is_added_in_team === "1" &&
-    (teamData.team_member.split(",").includes(user.member_id) ||
+    (teamData.team_member.split(",").includes(user.member_id)||
+      // teamData.sub_leaders.split(",").includes(user.member_id)||
+      (teamData.sub_leaders && teamData.sub_leaders.split(",").includes(user.member_id)) ||
       teamData.team_leader === user.member_id);
 
+  
+
+  // console.log(teamData.sub_leaders, "teamData.sub_leadersteamData.sub_leaders");
+  // console.log(teamData.team_member, "team member");
 
   // helper function for creating Members Dropdown options
   // step 1: taking the complete list of members from initialState
   // step 2: filtering that dataset with 3 conditions
   // step 3: checking that each one of them is active user
   // step 4: lastly mapping over them all and return only specfic object details using map
-  const generateOptions = (dataset) => {
+
+  const generateOptions = (dataset,excludeMemberId) => {
+    
     return dataset
       ?.filter((member) => {
-        return condition1(member) && (condition2(member) || condition3(member));
+        return (
+          condition1(member) &&
+          (condition2(member) || condition3(member)) &&
+          member.current_status === "active" &&
+          member.member_id !== excludeMemberId
+        );
       })
-      .filter((member) => member.current_status === "active")
       .map((member) => ({
         label: member.member_name,
         value: member.member_id,
       }));
   };
 
+  
 
   // setting initial default members, in the members options dropdown
   // (not checking if the default member is selected team leader that we are checking in below useEffect)
@@ -144,43 +152,54 @@ console.log(updatedTeamData,"gjhfjghdjfhgjdfhkgjhfdjg")
         }
       }
     );
-
+    // console.log("initialState.membersList", initialState.membersList);
     const defaultTeamLeader = generateOptions(initialState?.membersList)?.find(
       (member) => member.value === teamData?.team_leader
     );
-   
 
-    const defaultTeamSubLeader = generateOptions(
-      initialState?.membersList
-    )?.find((member) => {
-      console.log("teamData?.team_sub_leader;", teamData?.team_sub_leader);
-      return member.value === teamData?.team_sub_leader;
-    });
+    const selectedSubTeamLeaders = initialState.membersList
 
+      .filter(
+        (member) =>
+          teamData?.sub_leaders &&
+          teamData.sub_leaders.split(",").includes(member.member_id)
+      )
+      .map((member) => ({
+        label: member.member_name,
+        value: member.member_id,
+      }));
 
     setUpdatedTeamData((prev) => ({
       ...prev,
       teamMembersName: defaultMembers,
       teamLeader: defaultTeamLeader,
-      teamSubLeader: defaultTeamSubLeader,
-      
-    })); // adding default members that are already in the team
-  }, [initialState.membersList]);
+      teamSubLeader: selectedSubTeamLeaders,
+    }));
+  }, [initialState?.membersList]);
 
+  // console.log("teamData", teamData);
 
-  
-  // helper function for removing only the selected team leader from the dropdown list
   const generateMemberOptions = () => {
-    return generateOptions(initialState?.membersList).filter(
-      (member) => +member.value !== +updatedTeamData.teamLeader?.value
-    );
+    return generateOptions(initialState?.membersList).filter((member) => {
+      // Filter out team leader
+      if (updatedTeamData.teamLeader && member.value === updatedTeamData.teamLeader.value) {
+        return false;
+      }
+  
+      // Filter out selected team sub-leaders
+      return !updatedTeamData.teamSubLeader.some(
+        (subLeader) => subLeader.value === member.value
+      );
+    });
   };
+  
 
-  // setting members options
   useEffect(() => {
-    setMembersOptions(() => generateMemberOptions()); // for listing all the members options in the dropdowns
+    // Generate member options excluding team leader
+    setMembersOptions(() => generateMemberOptions());
 
-    const removeTeamLeader = (dataset) =>
+    // Filter team leader from teamMembersName and set team leader email
+    const removeTeamLeaderAndSubLeader = (dataset) =>
       dataset.filter(
         (member) => member.value !== updatedTeamData.teamLeader?.value
       );
@@ -189,29 +208,74 @@ console.log(updatedTeamData,"gjhfjghdjfhgjdfhkgjhfdjg")
       initialState?.membersList.find(
         (member) => member.member_id === updatedTeamData.teamLeader?.value
       )?.member_email ?? "";
-      
-    // removing team leader from members option is selected
-    setUpdatedTeamData((prev) => {
-      return {
-        ...prev,
-        teamMembersName: removeTeamLeader(prev.teamMembersName),
-        teamLeaderEmail: teamLeader,
-      };
-    });
-  }, [updatedTeamData?.teamLeader, initialState?.membersList]);
 
-  // setting team leaders options
+    setUpdatedTeamData((prev) => ({
+      ...prev,
+      teamMembersName: removeTeamLeaderAndSubLeader(prev.teamMembersName),
+      teamLeaderEmail: teamLeader,
+    }));
+  }, [initialState?.membersList,updatedTeamData.teamLeader,]);
+
+  // Sub team leader
+
   useEffect(() => {
-    setTeamLeaderOptions(() => generateOptions(initialState?.membersList)); // for listing all the options in the team leader dropdown
-  }, [updatedTeamData?.teamMembersName, initialState?.membersList]);
+    // Generate member options excluding selected sub-leaders
+    setMembersOptions(() => generateMemberOptions());
 
+    // Update team members list to exclude selected sub-leaders
+    const removeTeamLeaderAndSubLeader = (dataset) =>
+      dataset.filter((member) =>
+        updatedTeamData.teamSubLeader
+          ? !updatedTeamData.teamSubLeader.some(
+              (subLeader) => subLeader.value === member.value
+            )
+          : true
+      );
 
-  // setting team Sub-leader options
+    setUpdatedTeamData((prev) => ({
+      ...prev,
+      teamMembersName: removeTeamLeaderAndSubLeader(prev.teamMembersName),
+    }));
+  }, [initialState?.membersList,updatedTeamData.teamSubLeader,]);
+
   useEffect(() => {
-    setTeamSubLeaderOptions(() => generateOptions(initialState?.membersList));
-  }, [updatedTeamData?.teamMembersName, initialState?.membersList]);
+    const teamLeaderOptions = generateOptions(initialState?.membersList)
+      .filter((member) => {
+        const membersArray = teamData?.team_member.split(",");
+        return !membersArray.includes(member.value);
 
-console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
+
+        
+      });
+    setTeamLeaderOptions(teamLeaderOptions);
+  }, [initialState?.membersList, teamData?.team_member]);
+
+  useEffect(() => {
+    const teamSubLeaderOptions = generateOptions(initialState?.membersList)
+      .filter((member) => {
+        const membersArray = teamData?.team_member.split(",");
+        return (
+          !membersArray.includes(member.value) &&
+          member.value !== updatedTeamData.teamLeader?.value
+        );
+      });
+    setTeamSubLeaderOptions(teamSubLeaderOptions);
+  }, [initialState?.membersList, teamData?.team_member, updatedTeamData.teamLeader]);
+  
+
+  // useEffect(() => {
+  //   // const teamLeaderOptions = generateOptions(initialState?.membersList,);
+  //   // setTeamLeaderOptions(teamLeaderOptions);
+
+  //   const teamSubLeaderOptions = generateOptions(initialState?.membersList, updatedTeamData.teamLeader?.value);
+  //   setTeamSubLeaderOptions(teamSubLeaderOptions);
+  // }, [
+  //   initialState?.membersList,
+  //   // updatedTeamData.teamLeader,
+  //   updatedTeamData.teamSubLeader,
+  // ]);
+
+
 
   // for updating a team api
   const updateTeam = async () => {
@@ -221,10 +285,13 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
         current_user: +localStorage.getItem("userId") ?? null,
         team_name: updatedTeamData.teamName,
         team_leader: +updatedTeamData.teamLeader?.value,
-        team_sub_leader: +updatedTeamData.teamSubLeader?.value,
-        team_member: updatedTeamData.teamMembersName
+        team_sub_leader: updatedTeamData.teamSubLeader
           .map(({ value }) => value)
           .join(","),
+        team_member:  updatedTeamData.teamMembersName
+          .map(({ value }) => value)
+          .join(","),
+        // team_member:  "45",
         team_id: +teamData.id,
         status: updatedTeamData.teamStatus,
       };
@@ -260,8 +327,8 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
         ReactHotToast("Please input team name!", "error");
       } else if (updatedTeamData.teamLeader === "") {
         ReactHotToast("Please select team leader!", "error");
-      } else if (updatedTeamData.teamLeaderEmail === "") {
-        ReactHotToast("Please input team leader email!", "error");
+        // } else if (updatedTeamData.teamLeaderEmail === "") {
+        //   ReactHotToast("Please input team leader email!", "error");
       } else if (updatedTeamData.teamMembersName.length <= 0) {
         ReactHotToast("Please select team members!", "error");
       } else if (updatedTeamData.teamStatus === "") {
@@ -325,9 +392,15 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
                   closeMenuOnSelect={true}
                   options={teamLeaderOptions}
                   onChange={(value) => {
+                    const updatedSubLeaders =
+                      updatedTeamData.teamSubLeader.filter(
+                        (subLeader) => subLeader.value !== value.value
+                      );
+
                     setUpdatedTeamData((prev) => ({
                       ...prev,
                       teamLeader: value,
+                      teamSubLeader: updatedSubLeaders,
                     }));
                   }}
                   value={updatedTeamData.teamLeader}
@@ -335,16 +408,17 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
                   classNamePrefix="react-select-custom-styling"
                 />
               </div>
-           
+
               <div className="form-group mt-4">
-                <label htmlFor="teamLeader">Team Sub-Leader:</label>
+                <label htmlFor="teamSubLeader">Team Sub-Leader:</label>
+                {/* {console.log(teamSubLeaderOptions,"teamSubLeaderOptions")}
+{console.log(updatedTeamData.teamSubLeader,"updatedTeamData.teamSubLeader")} */}
                 <Select
                   name="teamSubLeader"
                   closeMenuOnSelect={true}
-                  options={teamSubLeaderOptions.filter(
-                    (subleader) =>
-                      subleader.value !== updatedTeamData.teamLeader.value
-                  )}
+                  isMulti
+                  options={teamSubLeaderOptions}
+                  //  options={generateMemberOptions()}
                   onChange={(value) => {
                     setUpdatedTeamData((prev) => ({
                       ...prev,
@@ -356,18 +430,18 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
                   classNamePrefix="react-select-custom-styling"
                 />
               </div>
-              <div className="form-group mt-4">
-                <label htmlFor="teamSubLeader2">Current Sub Leader Name:</label>
+              {/* <div className="form-group mt-4">
+                <label htmlFor="teamSubLeaderName">
+                  Current Sub Leader Name:
+                </label>
                 <input
-                  id="teamSubLeader2"
-                  name="teamSubLeader2"
-              
-                  value={updatedTeamData?.teamSubLeader2}
+                  id="teamSubLeaderName"
+                  name="teamSubLeaderName"
+                  value={updatedTeamData?.teamSubLeaderName}
                   disabled
                 />
-              </div>
+              </div> */}
 
-            
               <div className="form-group mt-4">
                 <label htmlFor="teamLeaderEmail">Team Leader Email:</label>
                 <input
@@ -379,13 +453,7 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
                   disabled
                 />
               </div>
-     
 
-
-
-
-
-             
               <div className="form-group mt-4">
                 <label htmlFor="teamMemberCount">Team Member Count:</label>
                 <input
@@ -408,6 +476,7 @@ console.log(teamSubLeaderOptions,"uuuuuuuuuuuuuuuu")
             <div className="w-50">
               <div className="form-group mt-5">
                 <label htmlFor="teamMembers">Team Members:</label>
+
                 <Select
                   closeMenuOnSelect={false}
                   components={animatedComponents}

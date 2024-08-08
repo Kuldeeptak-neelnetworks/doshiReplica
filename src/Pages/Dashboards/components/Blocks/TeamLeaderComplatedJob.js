@@ -71,7 +71,7 @@ const TeamLeaderComplatedJob = () => {
   return (
     <DashboardBlock
       tableInstance={jobsTableInstance}
-      title={"Complated Job"}
+      title={"Completed Job"}
       showButton={true}
     />
   );

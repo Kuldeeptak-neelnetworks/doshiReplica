@@ -38,6 +38,7 @@ const MyVerticallyCenteredModal = ({
     subject: "",
   });
   const [emailBody, setEmailBody] = useState("");
+console.log(emailOptions,"emailOptions")
 
   // for React quill editor
   const modules = {
@@ -77,6 +78,7 @@ const MyVerticallyCenteredModal = ({
         email_subject: mailDetails.subject,
         email_body: emailBody,
       };
+
 
       const result = await axios.post(url, body, {
         headers: headerOptions(),

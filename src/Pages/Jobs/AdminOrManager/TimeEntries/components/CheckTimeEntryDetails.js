@@ -71,7 +71,7 @@ export const CheckTimeEntryDetails = ({ timeEntry }) => {
       <div
         onClick={() => {
           setModalShow(true);
-          console.log("time entry: ", timeEntry);
+          // console.log("time entry: ", timeEntry);
         }}
       >
         <PlusIconSVG />

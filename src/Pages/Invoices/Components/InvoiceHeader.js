@@ -2,8 +2,6 @@ import React from "react";
 import styles from "../Invoices.module.css";
 
 const InvoiceHeader = ({ invoice }) => {
-
-  console.log(invoice.date,"uuuuuuuuuuuuuuuuuuu")
   return (
     <div className="card-header p-4">
       <img

@@ -88,49 +88,58 @@ const MemberList = ({ isLoading }) => {
       Header: "Team Names",
       accessor: "team_names",
     },
+ 
     {
       Header: "Billable Hours",
       accessor: "total_billable_hours",
-      Cell :({row})=> row.original?.total_billable_hours || "N.A"
+      Cell: ({ row }) => (
+        <span style={{ color: row.original.total_billable_hours ? "red" : "black" }}>
+          {row.original.total_billable_hours || "N.A"}
+        </span>
+      ),
     },
     {
       Header: "Side Work Hours",
       accessor: "total_side_works_hours",
-      Cell :({row})=> row.original?.total_side_works_hours || "N.A"
+      Cell :({row})=> (<span style={{ color: row.original.total_side_works_hours ? "red" : "black" }}>
+        {row.original.total_side_works_hours || "N.A"}
+      </span>)
+      
       
     },
-   
+
     {
+      
       id: "action",
-      Header: userRole !== "it_member" && userRole !== "operation_member" ? "Action" : "", 
+      // Header:
+      //   userRole !== "it_member" && userRole !== "operation_member"
+      //     ? "Action"
+      //     : "",
+      Header: "Action",
       Cell: ({ row }) => (
         <>
-          {userRole !== "it_member" && userRole !== "operation_member" && (
-            <div className="table-actions-wrapper d-flex justify-content-center align-items-center">
-              <Tooltip
-                id="time-entries-tooltip"
-                style={{
-                  background: "#000",
-                  color: "#fff",
-                }}
-                opacity={0.9}
-              />
-              <div
-                data-tooltip-id="time-entries-tooltip"
-                data-tooltip-content="Check Time Entries"
-                data-tooltip-place="top"
-              >
-                <MemberTimeEntriesModal 
-                  memberUserId={row.original.user_id}
-                />
-              </div>
+          {/* {userRole !== "it_member" && userRole !== "operation_member" && ( */}
+          <div className="table-actions-wrapper d-flex justify-content-center align-items-center">
+            <Tooltip
+              id="time-entries-tooltip"
+              style={{
+                background: "#000",
+                color: "#fff",
+              }}
+              opacity={0.9}
+            />
+            <div
+              data-tooltip-id="time-entries-tooltip"
+              data-tooltip-content="Check Time Entries"
+              data-tooltip-place="top"
+            >
+              <MemberTimeEntriesModal memberUserId={row.original.user_id} />
             </div>
-          )}
+          </div>
+          {/* )} */}
         </>
       ),
-    }
-    
-    
+    },
   ];
 
   const columnHeaders = [
@@ -262,7 +271,6 @@ const MemberList = ({ isLoading }) => {
         </div>
       </div>
 
-      
       {isLoading ? (
         <ReactTableSkeleton columnHeaders={columnHeaders} />
       ) : memberList?.length > 0 ? (

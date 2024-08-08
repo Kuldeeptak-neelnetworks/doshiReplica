@@ -23,7 +23,7 @@ const DashboardContent = ({ title }) => {
       <PageHeader title={title} />
 
       {/* Main Content */}
-      {userRole === "members" ? (
+      {userRole === "members" ||userRole==="members,team_sub_leader" ? (
         <div
           className="d-flex justify-content-center g-10 w-60"
           style={{ padding: "76px" }}
@@ -48,7 +48,7 @@ const DashboardContent = ({ title }) => {
       ) : (
         ""
       )}
-      {userRole === "members" ? (
+      {userRole === "members" ||userRole==="members,team_sub_leader" ? (
         ""
       ) : (
         <section className="m-auto mt-3 gap-5 main-content_form-section d-flex flex-column justify-content-start align-items-center " style={{width:"94%"}}>

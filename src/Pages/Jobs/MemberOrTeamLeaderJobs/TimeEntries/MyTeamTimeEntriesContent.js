@@ -25,6 +25,8 @@ import {
 } from "../../../../utils/utilities/utilityFunctions";
 import { SelectedMultipleEntriesModal } from "../../Components/SelectedMultipleEntriesModal";
 
+const userRole = localStorage.getItem("userRole");
+
 const breadCrumbs = [
   {
     pageName: "Home",
@@ -141,6 +143,95 @@ const MyTeamTimeEntriesContent = () => {
     return temp;
   }, [timeEntriesData]);
 
+  // const tableColumns = [
+  //   {
+  //     Header: "Sr no.",
+  //     accessor: "entries_id",
+  //     Cell: ({ row }) => row.index + 1,
+  //   },
+  //   {
+  //     Header: "Member",
+  //     accessor: "member_name",
+  //   },
+  //   {
+  //     Header: "Job",
+  //     accessor: "task_name",
+  //   },
+  //   {
+  //     Header: "Team",
+  //     accessor: "team_name",
+  //     Cell: ({ row }) => row.original.team_name ?? "---",
+  //   },
+  //   {
+  //     Header: "Reviewer",
+  //     accessor: "reviewer_name",
+  //     Cell: ({ row }) => row.original.reviewer_name ?? "---",
+  //   },
+  //   {
+  //     Header: "Status",
+  //     accessor: "time_entries_status",
+  //     Cell: ({ row }) => (
+  //       <div className="d-flex justify-content-center align-items-center">
+  //         <Stack direction="horizontal">
+  //           {row.original.time_entries_status === "approved" ? (
+  //             <Badge bg="success">Approved</Badge>
+  //           ) : (
+  //             <Badge bg="danger">Pending</Badge>
+  //           )}
+  //         </Stack>
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     Header: "Timestamp",
+  //     accessor: "working_date",
+  //     Cell: ({ row }) => {
+  //       const date = formatDate(row.original.working_date);
+  //       const time = formatTime(row.original.working_time);
+  //       return (
+  //         <div className="d-flex flex-column justify-content-center align-items-center gap-1">
+  //           <p className="m-0">{date}</p>
+  //           <p className="m-0">{time}</p>
+  //         </div>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     Header: "Description",
+  //     accessor: "work_description",
+  //   },
+
+  //   {
+  //     Header: "Edit",
+  //     Cell: ({ row }) => (
+  //       <>
+  //         {row.original.time_entries_status === "pending" && (
+  //           <div className="table-actions-wrapper d-flex justify-content-center align-items-center">
+  //             <Tooltip
+  //               id="edit-time-entry-tooltip"
+  //               style={{
+  //                 background: "#000",
+  //                 color: "#fff",
+  //               }}
+  //               opacity={0.9}
+  //             />
+  //             <div
+  //               data-tooltip-id="edit-time-entry-tooltip"
+  //               data-tooltip-content="Update Time Entry"
+  //               data-tooltip-place="top"
+  //             >
+  //               <UpdateTimeEntryModal
+  //                 setIsUpdated={setIsUpdated}
+  //                 timeEntryData={row.original}
+  //               />
+  //             </div>
+  //           </div>
+  //         )}
+  //       </>
+  //     ),
+  //   },
+  // ];
+
   const tableColumns = [
     {
       Header: "Sr no.",
@@ -198,7 +289,11 @@ const MyTeamTimeEntriesContent = () => {
       Header: "Description",
       accessor: "work_description",
     },
-    {
+  ];
+
+  // Conditionally add Edit column based on userRole
+  if (userRole !== "members,team_sub_leader") {
+    tableColumns.push({
       Header: "Edit",
       Cell: ({ row }) => (
         <>
@@ -226,8 +321,8 @@ const MyTeamTimeEntriesContent = () => {
           )}
         </>
       ),
-    },
-  ];
+    });
+  }
 
   const columns = useMemo(() => {
     if (!allEntriesApproved) {

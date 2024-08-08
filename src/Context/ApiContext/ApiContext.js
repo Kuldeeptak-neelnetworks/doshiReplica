@@ -11,9 +11,6 @@ export const ContextAPI = createContext();
 // export const nnAPIKey = `fcbf2fee98cee0be1da58b8a2066b7d3826f335def2261d693208e16275dde5b`;
 export const nnAPIKey = process.env.REACT_APP_NN_API;
 
-// export const nnAPIKey = "helo";
-// console.log("wowo: ", process.env.REACT_APP_NN_API);
-
 export const ApiContext = ({ children }) => {
   const navigate = useNavigate();
 
@@ -46,6 +43,12 @@ export const ApiContext = ({ children }) => {
   // main api url
   // const mainURL = "https://www.doshipms.com/api/"; // for live server & vercel both
   const mainURL = "https://doshipms-replica.neelnetworks.in/";
+  // let  mainURL;
+  //   if (process.env.NODE_ENV === 'development') {
+  //     mainURL = "https://www.doshipms.com/api/";
+  // } else {
+  //     mainURL = "https://doshipms-replica.neelnetworks.in/";
+  // }
 
   // logout function
   const logout = () => {

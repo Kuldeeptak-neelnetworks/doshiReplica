@@ -26,7 +26,7 @@ const MyVerticallyCenteredModal = (props) => {
   const { mainURL, logout, initialState } = useContext(ContextAPI);
 
   const [updatedTimeEntryDetails, setUpdatedTimeEntryDetails] = useState({
-    
+   
     job: {
       label: props.entryDetails.task_name,
       value: props.entryDetails.task_id,
@@ -45,8 +45,6 @@ const MyVerticallyCenteredModal = (props) => {
     startTime: getTime(props.entryDetails.work_start_time),
     endTime: getTime(props.entryDetails.work_end_time),
   });
-
-  console.log(updatedTimeEntryDetails,"updatedTimeEntryDetailsupdatedTimeEntryDetails")
   useEffect(() => {
     props.setNewUpdate(true);
   }, [props, updatedTimeEntryDetails]);
@@ -217,6 +215,28 @@ const MyVerticallyCenteredModal = (props) => {
       }
     }
   };
+  useEffect(() => {
+    if (props.entryDetails) {
+      setUpdatedTimeEntryDetails({
+        job: {
+          label: props.entryDetails.task_name,
+          value: props.entryDetails.task_id,
+        },
+        jobOptions: [],
+        timeEntryType: props.entryDetails.time_entries_type,
+        entryDescription: props.entryDetails.work_description,
+        entryAs: props.entryDetails.entries_as,
+        entryTime: {
+          time: dayjs(props.entryDetails.working_time, "HH:mm:ss"),
+          timeString: props.entryDetails.working_time,
+        },
+        isPOstDraft: props.entryDetails.is_post_draft,
+        entryDate: props.entryDetails.working_date,
+        startTime: getTime(props.entryDetails.work_start_time),
+        endTime: getTime(props.entryDetails.work_end_time),
+      });
+    }
+  }, [props.entryDetails]);
 
   return (
     <Modal

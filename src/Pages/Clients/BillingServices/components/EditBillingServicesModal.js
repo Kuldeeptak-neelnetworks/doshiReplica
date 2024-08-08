@@ -163,7 +163,7 @@ export const EditBillingServicesModal = ({
       <div
         onClick={() => {
           setModalShow(true);
-          console.log("billingServiceData: ", billingServiceData);
+          // console.log("billingServiceData: ", billingServiceData);
         }}
       >
         <EditSVG />
