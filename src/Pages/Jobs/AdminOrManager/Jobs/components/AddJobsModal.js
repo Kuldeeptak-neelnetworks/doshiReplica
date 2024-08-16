@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import { DatePicker } from "antd";
+// import { DatePicker } from "antd";
 
 import { projectsIcon } from "../../../../../utils/ImportingImages/ImportingImages";
 import { SpinningLoader } from "../../../../../Components/SpinningLoader/SpinningLoader";
@@ -13,6 +13,10 @@ import {
 } from "../../../../../utils/utilities/utilityFunctions";
 import { ReactHotToast } from "../../../../../Components/ReactHotToast/ReactHotToast";
 
+import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker, Space, message } from "antd";
+import moment from "moment";
+
 const MyVerticallyCenteredModal = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -23,12 +27,13 @@ const MyVerticallyCenteredModal = (props) => {
     getAllTeams,
     getAllBillingServices,
   } = useContext(ContextAPI);
-
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [jobDetails, setJobDetails] = useState({
     jobName: "",
     jobTypeId: "",
     clientId: "",
-    assignToTeam: false,
+    // assignToTeam: false,
     teamId: "",
     description: "",
     billingService: "",
@@ -41,7 +46,7 @@ const MyVerticallyCenteredModal = (props) => {
       jobName: "",
       jobTypeId: "",
       clientId: "",
-      assignToTeam: false,
+      // assignToTeam: false,
       teamId: "",
       description: "",
       billingService: "",
@@ -128,17 +133,14 @@ const MyVerticallyCenteredModal = (props) => {
         job_name: jobDetails.jobName,
         job_type: jobDetails.jobTypeId,
         client_id: jobDetails.clientId,
+        team_id: jobDetails.teamId,
+        assigned_on: jobDetails.startDate.dateString,
+        due_date: jobDetails.endDate.dateString,
+        billing_services: jobDetails.billingService,
+        billing_rates: jobDetails.billingRate,
+        job_description: jobDetails.description,
+        assign_to: "Team",
       };
-
-      if (jobDetails.assignToTeam) {
-        body.team_id = jobDetails.teamId;
-        body.assigned_on = jobDetails.startDate.dateString;
-        body.due_date = jobDetails.endDate.dateString;
-        body.billing_services = jobDetails.billingService;
-        body.billing_rates = jobDetails.billingRate;
-        body.job_description = jobDetails.description;
-        body.assign_to = "Team";
-      }
 
       const url = `${mainURL}add/job`;
       const result = await axios.post(url, body, {
@@ -175,15 +177,24 @@ const MyVerticallyCenteredModal = (props) => {
     } = jobDetails;
 
     const bool =
-      !assignToTeam ||
-      (assignToTeam &&
-        teamId !== "" &&
-        description !== "" &&
-        description !== "" &&
-        billingService !== "" &&
-        billingRate !== "" &&
-        startDate !== "" &&
-        endDate !== "");
+      // !assignToTeam ||
+
+      //   teamId !== "" ||
+      //   // description !== "" &&
+      //   // description !== "" &&
+      //   billingService !== "" ||
+      //   billingRate !== "" ||
+      //   startDate !== "" ||
+      //   endDate !== "";
+
+      teamId !== "" &&
+      billingService !== "" &&
+      billingRate !== "" &&
+      startDate !== "" &&
+      clientId !== "" &&
+      endDate !== "" &&
+      jobTypeId !== "" &&
+      jobName !== "";
 
     if (jobName && jobTypeId && clientId && bool) {
       addNewJob();
@@ -192,12 +203,12 @@ const MyVerticallyCenteredModal = (props) => {
         [!jobName]: "Please enter Job Name!",
         [!jobTypeId]: "Please select Job Type!",
         [!clientId]: "Please select Client!",
-        [assignToTeam && !teamId]: "Please select Team!",
-        [assignToTeam && !description]: "Please add Description!",
-        [assignToTeam && !billingService]: "Please select Billing Service",
-        [assignToTeam && !billingRate]: "Please select Billing Rate",
-        [assignToTeam && !startDate]: "Please select Start Date",
-        [assignToTeam && !endDate]: "Please select End Date",
+        [!teamId]: "Please select Team!",
+        // [assignToTeam && !description]: "Please add Description!",
+        [!billingService]: "Please select Billing Service",
+        [!billingRate]: "Please select Billing Rate",
+        [!startDate]: "Please select Start Date",
+        [!endDate]: "Please select End Date",
       };
 
       const errorMessage = conditions[true];
@@ -207,6 +218,73 @@ const MyVerticallyCenteredModal = (props) => {
       }
     }
   };
+
+  const handleDateInputChange = (e, field) => {
+    const { value } = e.target;
+    setJobDetails((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+
+  const onChangeDate = (element, date, dateString) => {
+    setJobDetails((prev) => ({
+      ...prev,
+      [element]: { date, dateString },
+    }));
+  };
+
+  const handleChange = (date, dateString, element) => {
+    onChangeDate(element, date, dateString);
+  };
+
+  const handleBlur = (e, element) => {
+    const inputValue = e.target.value;
+    const parsedDate = moment(inputValue, "DD-MM-YYYY", true);
+    if (parsedDate.isValid()) {
+      onChangeDate(element, parsedDate, parsedDate.format("DD-MM-YYYY"));
+    } else {
+      message.error("Invalid date format. Please use DD-MM-YYYY.");
+    }
+  };
+  // const handleStartDateChange = (date) => {
+  //   setSelectedStartDate(date);
+  //   setJobDetails((prev) => ({
+  //     ...prev,
+  //     startDate: date ? format(date, "dd-MM-yyyy") : "",
+  //   }));
+  // };
+
+  // const handleEndDateChange = (date) => {
+  //   setSelectedEndDate(date);
+  //   setJobDetails((prev) => ({
+  //     ...prev,
+  //     endDate: date ? format(date, "dd-MM-yyyy") : "",
+  //   }));
+  // };
+
+  // const handleManualStartDateChange = (event) => {
+  //   const dateString = event.target.value;
+  //   setJobDetails((prev) => ({ ...prev, startDate: dateString }));
+  //   const parsedDate = parse(dateString, "dd-MM-yyyy", new Date());
+  //   if (isValid(parsedDate)) {
+  //     setSelectedStartDate(parsedDate);
+  //   } else {
+  //     setSelectedStartDate(null);
+  //   }
+  // };
+
+  // const handleManualEndDateChange = (event) => {
+  //   const dateString = event.target.value;
+  //   setJobDetails((prev) => ({ ...prev, endDate: dateString }));
+  //   const parsedDate = parse(dateString, "dd-MM-yyyy", new Date());
+  //   if (isValid(parsedDate)) {
+  //     setSelectedEndDate(parsedDate);
+  //   } else {
+  //     setSelectedEndDate(null);
+  //   }
+  // };
 
   return (
     <Modal
@@ -270,7 +348,7 @@ const MyVerticallyCenteredModal = (props) => {
             />
           </div>
 
-          <div className="form-group mt-3 w-100 flex-row align-items-center justify-content-start">
+          {/* <div className="form-group mt-3 w-100 flex-row align-items-center justify-content-start">
             <label style={{ width: "max-content" }} htmlFor="assignJob">
               Assign to Team (optional):
             </label>
@@ -289,110 +367,135 @@ const MyVerticallyCenteredModal = (props) => {
                 }))
               }
             />
+          </div> */}
+
+          {/* {jobDetails.assignToTeam && (
+            <> */}
+          <div className="form-group mt-4 w-100">
+            <label htmlFor="team">Select Team:</label>
+            <SelectElement
+              isLoading={false}
+              options={teamOptions}
+              name="team"
+              handleChange={(value) =>
+                setJobDetails((prev) => ({ ...prev, teamId: value }))
+              }
+              isClearable={false}
+            />
+          </div>
+          <div className="form-group mt-3 w-100">
+            <label htmlFor="billingService">Billing Service:</label>
+            <SelectElement
+              isLoading={false}
+              options={billingServicesOptions}
+              name="billingService"
+              handleChange={(value) =>
+                setJobDetails((prev) => ({
+                  ...prev,
+                  billingService: value,
+                }))
+              }
+              isClearable={false}
+            />
           </div>
 
-          {jobDetails.assignToTeam && (
-            <>
-              <div className="form-group mt-4 w-100">
-                <label htmlFor="team">Select Team:</label>
-                <SelectElement
-                  isLoading={false}
-                  options={teamOptions}
-                  name="team"
-                  handleChange={(value) =>
-                    setJobDetails((prev) => ({ ...prev, teamId: value }))
-                  }
-                  isClearable={false}
-                />
-              </div>
-              <div className="form-group mt-3 w-100">
-                <label htmlFor="billingService">Billing Service:</label>
-                <SelectElement
-                  isLoading={false}
-                  options={billingServicesOptions}
-                  name="billingService"
-                  handleChange={(value) =>
-                    setJobDetails((prev) => ({
-                      ...prev,
-                      billingService: value,
-                    }))
-                  }
-                  isClearable={false}
-                />
-              </div>
+          <div className="form-group mt-3 w-100">
+            <label htmlFor="billingRate">Billing Rate (per hr):</label>
+            <input
+              id="billingRate"
+              name="billingRate"
+              placeholder="Eg: 999"
+              type="number"
+              required
+              onChange={(e) =>
+                setJobDetails((prev) => ({
+                  ...prev,
+                  billingRate: e.target.value,
+                }))
+              }
+              value={jobDetails.billingRate}
+            />
+          </div>
 
-              <div className="form-group mt-3 w-100">
-                <label htmlFor="billingRate">Billing Rate (per hr):</label>
+          <div className="form-group mt-3 w-100">
+            <label htmlFor="jobDescription">Job Description:</label>
+            <textarea
+              id="jobDescription"
+              name="jobDescription"
+              className="w-100"
+              rows={3}
+              placeholder="Eg. Auditing Report (2022/23 Financial Year) for Doshi Accounting Company"
+              value={jobDetails.description}
+              onChange={(e) =>
+                setJobDetails((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
+            />
+          </div>
+
+          <div className="form-group mt-3 w-100">
+            <label htmlFor="startDate">Processing Period Start Date:</label>
+
+            {/* <DatePicker
+              id="startDate"
+              name="startDate"
+                className="form-control datepicker"
+              placeholderText="dd-MM-yyyy"
+           
+              selected={selectedStartDate}
+              onChange={handleStartDateChange}
+              dateFormat="dd-MM-yyyy"
+              customInput={
                 <input
-                  id="billingRate"
-                  name="billingRate"
-                  placeholder="Eg: 999"
-                  type="number"
-                  required
-                  onChange={(e) =>
-                    setJobDetails((prev) => ({
-                      ...prev,
-                      billingRate: e.target.value,
-                    }))
-                  }
-                  value={jobDetails.billingRate}
+                  type="text"
+                  value={jobDetails.startDate}
+                  onChange={handleManualStartDateChange}
+                
                 />
-              </div>
+              }
+            /> */}
+              <DatePicker
+        className="form-control datepicker"
+        popupClassName="pop-up-box"
+        onChange={(date, dateString) => handleChange(date, dateString, "startDate")}
+        value={jobDetails.startDate.date || null}
+        format="DD-MM-YYYY"
+        placeholder="Select or enter start date (DD-MM-YYYY)"
+        onBlur={(e) => handleBlur(e, "startDate")}
+      />
+          </div>
 
-              <div className="form-group mt-3 w-100">
-                <label htmlFor="jobDescription">Job Description:</label>
-                <textarea
-                  id="jobDescription"
-                  name="jobDescription"
-                  className="w-100"
-                  rows={3}
-                  placeholder="Eg. Auditing Report (2022/23 Financial Year) for Doshi Accounting Company"
-                  value={jobDetails.description}
-                  onChange={(e) =>
-                    setJobDetails((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                />
-              </div>
+          <div className="form-group mt-3 w-100">
+            <label htmlFor="endDate">Processing Period End Date:</label>
 
-              <div className="form-group mt-3 w-100">
-                <label htmlFor="startDate">Processing Period Start Date:</label>
-                <DatePicker
-                  className="form-control datepicker"
-                  popupClassName="pop-up-box"
-                  onChange={(date, dateString) =>
-                    setJobDetails((prev) => ({
-                      ...prev,
-                      startDate: { date, dateString },
-                    }))
-                  }
-                  value={jobDetails.startDate.date}
-                  name="startDate"
-                  placeholder="Select / Enter date in YYYY-MM-DD format"
-                  // disabledDate={(current) => current && current < moment().startOf("day")}
+            {/* <DatePicker
+              placeholderText="dd-MM-yyyy"
+              id="endDate"
+              name="endDate"
+              selected={selectedEndDate}
+              onChange={handleEndDateChange}
+              dateFormat="dd-MM-yyyy"
+              customInput={
+                <input
+                  type="text"
+                  value={jobDetails.endDate}
+                  onChange={handleManualEndDateChange}
                 />
-              </div>
+              }
+            /> */}
 
-              <div className="form-group mt-3 w-100">
-                <label htmlFor="endDate">Processing Period End Date:</label>
-                <DatePicker
-                  className="form-control datepicker"
-                  popupClassName="pop-up-box"
-                  onChange={(date, dateString) =>
-                    setJobDetails((prev) => ({
-                      ...prev,
-                      endDate: { date, dateString },
-                    }))
-                  }
-                  value={jobDetails.endDate.date}
-                  name="endDate"
-                  placeholder="Select / Enter date in YYYY-MM-DD format"
-                />
-              </div>
-            </>
-          )}
+<DatePicker
+        className="form-control datepicker"
+        popupClassName="pop-up-box"
+        onChange={(date, dateString) => handleChange(date, dateString, "endDate")}
+        value={jobDetails.endDate.date || null}
+        format="DD-MM-YYYY"
+        placeholder="Select or enter end date (DD-MM-YYYY)"
+        onBlur={(e) => handleBlur(e, "endDate")}
+      />
+          </div>
 
           <button type="submit" className="custom-btn mt-4">
             {isLoading ? <SpinningLoader /> : "Add Job"}

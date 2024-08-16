@@ -37,6 +37,11 @@ const JobsContent = ({ jobsData, setIsUpdated, isLoading }) => {
       Cell: ({ row }) => row.index + 1,
     },
     {
+      Header: "BPO No",
+      accessor: "bpo_no",
+    },
+
+    {
       Header: "Job Name",
       accessor: "job_name",
     },

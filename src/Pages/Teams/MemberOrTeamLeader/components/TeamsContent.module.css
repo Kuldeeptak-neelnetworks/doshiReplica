@@ -57,3 +57,23 @@
   color: var(--primary-background-color);
   letter-spacing: 0.5px;
 }
+.rolesContainer {
+  width: 100%;
+}
+
+.roleGroup {
+  margin-bottom: 20px; /* Space between roles */
+}
+
+.roleTitle {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.membersList {
+  margin-top: 10px;
+}
+
+.memberItem {
+  margin-bottom: 5px; /* Space between members */
+}

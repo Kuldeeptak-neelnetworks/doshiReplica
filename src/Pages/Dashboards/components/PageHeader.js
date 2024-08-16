@@ -45,7 +45,7 @@ const PageHeader = ({ title }) => {
     }
 
     const url =
-      userRole === "team_leaders,members"
+      userRole === "team_leaders,members" || userRole === "members,team_sub_leader"
         ? `${mainURL}dashboard/project-count-for-team-leader/${userId}`
         : `${mainURL}dashboard/project-count/${userId}`;
 
@@ -61,7 +61,6 @@ const PageHeader = ({ title }) => {
     } catch (error) {
       console.error("Error fetching project Count:", error);
     }
-
   };
 
   useEffect(() => {
@@ -70,7 +69,7 @@ const PageHeader = ({ title }) => {
 
   return (
     <>
-      {userRole === "members" || userRole === "members,team_sub_leader" ? (
+      {userRole === "members" ? (
         ""
       ) : (
         <section className="main-content_header sticky_header">

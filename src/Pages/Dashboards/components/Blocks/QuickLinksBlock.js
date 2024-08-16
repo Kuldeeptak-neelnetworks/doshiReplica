@@ -44,7 +44,7 @@ const QuickLinksBlock = () => {
     {
       link: "Members",
       linkUrl: "/members",
-      allow: validateUserRole(["it_member", "operation_member","team_leaders,members"]),
+      allow: validateUserRole(["it_member", "operation_member","team_leaders,members","members,team_sub_leader"]),
     },
     // {
     //   link: "Holidays",

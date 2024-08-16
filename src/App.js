@@ -79,6 +79,8 @@ import CompanySettings from "./Pages/Master/components/CompanySettings";
 import { GetAllNotifications } from "./Components/Notification/AllNotification";
 import IpAddress from "./Pages/Master/IPAddress/IpAddress";
 import { Unauthorized } from "./Components/Unauthorized/Unauthorized";
+import TeamMemberList from "./Pages/Teams/MemberOrTeamLeader/components/TeamMemberLIst";
+import BillableTimeEntries from "./Pages/Jobs/MemberOrTeamLeaderJobs/TimeEntries/BillableTimeEntries";
 
 function App() {
   const { getUserDetails, userDetails } = useContext(ContextAPI);
@@ -138,6 +140,7 @@ function App() {
 
             <Route path="/jobs/assign-job" element={<AssignJobs />} />
             <Route path="/jobs/category" element={<JobCategory />} />
+        
 
             <Route path="/reports" element={<Reports />} />
 
@@ -161,12 +164,14 @@ function App() {
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/teams" element={<Teams />} />
+          <Route path="/teams/team-member" element={<TeamMemberList />} />
 
           <Route path="/jobs" element={<Jobs />} />
 
           <Route path="/jobs/job-entry" element={<AddJobEntry />} />
 
           <Route path="/jobs/time-entries" element={<TimeEntries />} />
+          <Route path="/jobs/billable-jobs" element={<BillableTimeEntries />} />
 
           <Route path="/logs" element={<Logs />} />
           <Route path="/company-settings" element={<CompanySettings />} />

@@ -168,7 +168,7 @@ const Sidebar = () => {
 
         {/* Reports */}
         {userDetails?.member_role === "it_member" ||
-        userDetails?.member_role === "operation_member" ||
+        userDetails?.member_role === "operation_member" || userDetails?.member_role==="members,team_sub_leader"||
         userDetails?.member_role === `team_leaders,members` ? (
           <li className={`navLink ${addActiveClass.reports ? "active" : ""}`}>
             <div className="icon-link">
@@ -204,7 +204,7 @@ const Sidebar = () => {
                   </NavLink>
                 </li>
               )}
-              {userDetails?.member_role === `team_leaders,members` && (
+              {(userDetails?.member_role === `team_leaders,members`||userDetails?.member_role === `members,team_sub_leader`) && (
                 <li>
                   <NavLink
                     className={`link_name ${
@@ -314,7 +314,8 @@ const Sidebar = () => {
               </li>
             )}
 
-            {(userDetails?.member_role === "members" ||  userDetails?.member_role === "members,team_sub_leader" ||
+            {(userDetails?.member_role === "members" ||
+              userDetails?.member_role === "members,team_sub_leader" ||
               userDetails?.member_role === "team_leaders,members") && (
               <li>
                 <NavLink
@@ -329,7 +330,8 @@ const Sidebar = () => {
             )}
 
             {(userDetails?.member_role === "it_member" ||
-               userDetails?.member_role === "operation_member" ||  userDetails?.member_role === "members,team_sub_leader" ||
+              userDetails?.member_role === "operation_member" ||
+              userDetails?.member_role === "members,team_sub_leader" ||
               userDetails?.member_role === "team_leaders,members") && (
               <li>
                 <NavLink
@@ -343,6 +345,19 @@ const Sidebar = () => {
               </li>
             )}
 
+            {(userDetails?.member_role === "it_member" ||
+              userDetails?.member_role === "operation_member") && (
+              <li>
+                <NavLink
+                  className={`link_name ${
+                    checkPathIsSame("/jobs/billable-jobs") ? "active" : ""
+                  }`}
+                  to="/jobs/billable-jobs"
+                >
+               Billable Jobs
+                </NavLink>
+              </li>
+            )}
             {(userDetails?.member_role === "it_member" ||
               userDetails?.member_role === "operation_member") && (
               <li>
@@ -376,7 +391,7 @@ const Sidebar = () => {
           </li>
         )}
         {/* Teams */}
-        <li className={`navLink ${addActiveClass.teams ? "active" : ""}`}>
+        {/* <li className={`navLink ${addActiveClass.teams ? "active" : ""}`}>
           <NavLink to="/teams">
             <span className="sidebar-img-wrapper">
               <img alt="teams" src={teamsIcon} />
@@ -389,7 +404,50 @@ const Sidebar = () => {
               Teams
             </span>
           </NavLink>
+        </li> */}
+
+        <li className={`navLink ${addActiveClass.jobs ? "active" : ""}`}>
+          <div className="icon-link">
+            <NavLink className="link_name" to="/teams">
+              <span className="sidebar-img-wrapper">
+                <img alt="jobs" src={teamsIcon} />
+              </span>
+              <span
+                className={`link_name ${
+                  checkPathIsIncluded("/teams") ? "active" : ""
+                }`}
+              >
+                Teams
+              </span>
+            </NavLink>
+            {userDetails?.member_role !== "it_member" && (
+              <div className="subMenu-caret-wrapper" onClick={handleArrowClick}>
+                {subMenuTogglerCaret()}
+              </div>
+            )}
+          </div>
+
+          <ul className="sub-menu">
+            {(userDetails?.member_role === "members" ||
+              userDetails?.member_role === "members,team_sub_leader" ||
+              userDetails?.member_role === "team_leaders,members") && (
+              <li>
+                <NavLink
+                  className={`link_name ${
+                    checkPathIsSame("/teams/team-member") ? "active" : ""
+                  }`}
+                  to="/teams/team-member"
+                >
+                  Team Member
+                </NavLink>
+              </li>
+              
+
+              
+            )}
+          </ul>
         </li>
+
         {/* Clients */}
         {(userDetails?.member_role === "it_member" ||
           userDetails?.member_role === "operation_member") && (

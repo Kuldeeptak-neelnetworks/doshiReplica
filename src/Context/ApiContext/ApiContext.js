@@ -9,7 +9,6 @@ import {
 
 export const ContextAPI = createContext();
 // export const nnAPIKey = `fcbf2fee98cee0be1da58b8a2066b7d3826f335def2261d693208e16275dde5b`;
-// export const nnAPIKey = `fcbf2fee98cee0be1da58b8a2066b7d3826f335def2261d693208e16275dde5b`;
 export const nnAPIKey = process.env.REACT_APP_NN_API;
 
 export const ApiContext = ({ children }) => {
@@ -25,6 +24,7 @@ export const ApiContext = ({ children }) => {
     myTeams: {},
     jobs: [],
     allTimeEntries: [],
+    allBillableTimeEntries: [],
     myAllTimeEntries: [],
     myteamTimeEntries: [],
     assignJobsList: [],
@@ -197,7 +197,7 @@ export const ApiContext = ({ children }) => {
     getData(url, (result) => {
       setInitialState((prev) => ({
         ...prev,
-        membersList: result?.data?.members_list ?? [],
+        membersList: result?.data?.members_list?.users ?? [],
       }));
     });
   };
@@ -245,6 +245,15 @@ export const ApiContext = ({ children }) => {
       setInitialState((prev) => ({
         ...prev,
         allTimeEntries: result?.data?.time_entries_data ?? [],
+      }));
+    });
+  };
+  const getAllBillableTimeEntries = () => {
+    const url = `${mainURL}get/all-billable-hours-time-entries/${userId}`;
+    getData(url, (result) => {
+      setInitialState((prev) => ({
+        ...prev,
+        allBillableTimeEntries: result?.data?.time_entries_data ?? [],
       }));
     });
   };
@@ -343,6 +352,7 @@ export const ApiContext = ({ children }) => {
         getAllHolidays,
         getAllMyTimeEntries,
         getAllTimeEntries,
+        getAllBillableTimeEntries,
         getAllMyTeamTimeEntries,
         getAllLogs,
         getMyLogs,

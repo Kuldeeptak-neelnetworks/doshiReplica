@@ -74,7 +74,7 @@ const MyVerticallyCenteredModal = (props) => {
 
 
 
-  
+
 
   const handleEntryAs = (e) => {
     setEntryDetails((prev) => ({

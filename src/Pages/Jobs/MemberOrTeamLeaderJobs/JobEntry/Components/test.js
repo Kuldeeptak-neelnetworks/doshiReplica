@@ -40,13 +40,13 @@ const MyVerticallyCenteredModal = (props) => {
     startTime: "",
     endTime: "",
     entryDescription: "",
-    // job: "",
+    job: null, // Changed to null to handle Select default value better
+    bpoNo: null,
+    bpoNoOptions:[],
     entryAs: "",
-    job: "",
-    bpoNo: "",
     teamId: "",
     jobOptions: [],
-    postJobOption:[],
+ 
     calendarDate: new Date(),
   });
 
@@ -62,13 +62,265 @@ const MyVerticallyCenteredModal = (props) => {
     setEntryDetails((prev) => ({ ...prev, teamId: initialState?.myTeams?.id }));
   }, [initialState.myTeams]);
 
- 
-  console.log("initialState?.myTeams", initialState.myTeams);
+
+
+  useEffect(() => {
+    const settingBPOOptions = (data) => {
+        if (Array.isArray(data)) {
+            return data
+                .filter((job) => job.bpo_no)
+                .map((job) => ({
+                    label: job.bpo_no,
+                    value: job.bpo_no,
+                }));
+        } else {
+            return [];
+        }
+    };
+
+    const bpoOptions =
+        entryDetails.entryAs === "Team"
+            ? settingBPOOptions(initialState?.myTeams?.assigned_jobs) ?? []
+            : entryDetails.entryAs === "Member"
+            ? settingBPOOptions(initialState?.myJobs) ?? []
+            : [];
+
+    setEntryDetails((prev) => ({ ...prev, bpoNoOptions: bpoOptions }));
+}, [initialState?.myJobs, initialState?.myTeams?.assigned_jobs, entryDetails.entryAs]);
+
+// setting Job Options
+useEffect(() => {
+    const settingJobsOptions = (data, selectedBPO) => {
+        if (Array.isArray(data)) {
+            return data
+                .filter((job) => job.bpo_no === selectedBPO && job.job_status === "In Progress")
+                .map((job) => ({
+                    label: `${entryDetails.entryAs === "Team" ? job.task_name : job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+                    value: entryDetails.entryAs === "Team" ? job.task_id : job.assign_id,
+                }));
+        } else {
+            return [];
+        }
+    };
+
+    const jobOptions =
+        entryDetails.entryAs === "Team"
+            ? settingJobsOptions(initialState?.myTeams?.assigned_jobs, entryDetails.bpoNo) ?? []
+            : entryDetails.entryAs === "Member"
+            ? settingJobsOptions(initialState?.myJobs, entryDetails.bpoNo) ?? []
+            : [];
+
+    setEntryDetails((prev) => ({ ...prev, jobOptions }));
+
+   
+      const filterJobs = (data, type) => {
+        if (Array.isArray(data)) {
+          return data
+            .filter(job => job.assign_as === type)
+            .map(job => ({
+              label: `${job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+              value: job.assign_id,
+            }));
+        }
+        return [];
+      };
+      
+    
+       
+      const postDraftJobOptions =
+        entryDetails.entryAs === "Team"
+          ? filterJobs(initialState?.postDraftChangesJobs, "Team")
+          : entryDetails.entryAs === "Member"
+          ? filterJobs(initialState?.postDraftChangesJobs, "Individual")
+          : [];
+
+      setEntryDetails(prev => ({ ...prev, jobOptions: postDraftJobOptions }));
+
+      if (showPostDraftChangesForm) {
+        setEntryDetails((prev) => ({ ...prev, jobOptions: postDraftJobOptions }));
+        console.log("postDraftJobOptions",postDraftJobOptions)
+      } else {
+        setEntryDetails((prev) => ({ ...prev, jobOptions}));
+      }
+    
+
+  }, [initialState?.myJobs, initialState?.myTeams?.assigned_jobs, entryDetails.entryAs, entryDetails.bpoNo, initialState?.postDraftChangesJobs, showPostDraftChangesForm]);
+
+console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJobs)
+  // setting Job Options
+  // useEffect(() => {
+  //   const settingJobsOptions = (data) => {
+  //     if (Array.isArray(data)) {
+  //       return data
+  //         .filter((job) => job.job_status === "In Progress")
+  //         .map((job) => ({
+  //           label: `${entryDetails.entryAs === "Team" ? job.task_name : job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+  //           value: entryDetails.entryAs === "Team" ? job.task_id : job.assign_id,
+  //         }));
+  //     } else {
+  //       return [];
+  //     }
+  //   };
+
+  //   const settingJobsCodeOptions = (data) => {
+  //     if (Array.isArray(data)) {
+  //       return data
+  //         .filter((job) => job.job_status === "In Progress")
+  //         .map((job) => ({
+  //           label: `${entryDetails.entryAs === "Team" ? job.bpo_no : job.bpo_no}`,
+  //           value: entryDetails.entryAs === "Team" ? job.task_id : job.assign_id,
+  //         }));
+  //     } else {
+  //       return [];
+  //     }
+  //   };
+  //    const filterJobs = (data, type) => {
+  //         if (Array.isArray(data)) {
+  //           console.log("job.assign_as",data)
+  //           return data
+    
+            
+  //             ?.filter((job) => job.assign_as === type)
+            
+  //             // ?.map((job) => ({ label: job.job_name, value: job.assign_id }));
+              
+  //             .map((job) => ({
+  //               label: `${job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+  //               value: job.assign_id,
+                
+  //             }));
+    
+              
+  //         } else {
+  //           return [];
+  //         }
+  //       };
+
+  //   const options =
+  //     entryDetails.entryAs === "Team"
+  //       ? settingJobsOptions(initialState?.myTeams?.assigned_jobs) ?? []
+  //       : entryDetails.entryAs === "Member"
+  //       ? settingJobsOptions(initialState?.myJobs) ?? []
+  //       : [];
+
+  //   const jobCodeOption =
+  //     entryDetails.entryAs === "Team"
+  //       ? settingJobsCodeOptions(initialState?.myTeams?.assigned_jobs) ?? []
+  //       : entryDetails.entryAs === "Member"
+  //       ? settingJobsCodeOptions(initialState?.myJobs) ?? []
+  //       : [];
+
+  //   if (showPostDraftChangesForm) {
+  //     const postDraftJobOptions =
+  //       entryDetails.entryAs === "Team"
+  //         ? filterJobs(entryDetails.jobCode?.value)
+  //         : entryDetails.entryAs === "Member"
+  //         ? filterJobs(entryDetails.jobCode?.value)
+  //         : [];
+  //     setEntryDetails((prev) => ({ ...prev, jobOptions: postDraftJobOptions }));
+  //   } else {
+  //     setEntryDetails((prev) => ({ ...prev, jobOptions: options, bpoNoOptions: jobCodeOption }));
+  //   }
+  // }, [
+  //   initialState?.myJobs,
+  //   entryDetails?.entryAs,
+  //   initialState?.myTeams?.assigned_jobs,
+  //   initialState.postDraftChangesJobs,
+  //   entryDetails?.jobCode,
+  //   showPostDraftChangesForm,
+  // ]);
+
+  console.log(JSON.stringify(initialState?.myTeams?.assigned_jobs),"initialState?.myTeams?.assigned_jobs")
+  // useEffect(() => {
+  //   const settingJobsOptions = (data) => {
+  //     if (Array.isArray(data)) {
+  //       return data
+  //         ?.filter((job) => job.job_status === "In Progress")
+  //         ?.map((job) => ({
+  //           // label:
+  //           //   entryDetails.entryAs === "Team" ? job.task_name : job.job_name,
+  //           label: `${entryDetails.entryAs === "Team" ? job.task_name : job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+  //            value:
+  //             entryDetails.entryAs === "Team" ? job.task_id : job.assign_id,
+  //         }));
+  //     } else {
+  //       return [];
+  //     }
+  //   };
+
+  //   const filterJobs = (data, type) => {
+  //     if (Array.isArray(data)) {
+  //       console.log("job.assign_as",data)
+  //       return data
+
+        
+  //         ?.filter((job) => job.assign_as === type)
+        
+  //         // ?.map((job) => ({ label: job.job_name, value: job.assign_id }));
+          
+  //         .map((job) => ({
+  //           label: `${job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+  //           value: job.assign_id,
+            
+  //         }));
+
+          
+  //     } else {
+  //       return [];
+  //     }
+  //   };
+
+
+
+  //   console.log(initialState?.postDraftChangesJobs,"initialState?.postDraftChangesJobs")
+  //   // const filterJobs = (data, type) => {
+  //   //   if (Array.isArray(data)) {
+  //   //     return data
+  //   //       .filter((job) => {
+  //   //         console.log("Job Object:", job);
+  //   //         console.log("Job Assign As:", job.assign_as);
+  //   //         return job.assign_as === type;
+  //   //       })
+  //   //       .map((job) => ({
+  //   //         label: `${entryDetails.entryAs === "Team" ? job.job_name : ""} ( Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
+  //   //         value: job.assign_id,
+  //   //       }));
+  //   //   } else {
+  //   //     return [];
+  //   //   }
+  //   // };
+
+  //   const options =
+  //     entryDetails.entryAs === "Team"
+  //       ? settingJobsOptions(initialState?.myTeams?.assigned_jobs) ?? []
+  //       : entryDetails.entryAs === "Member"
+  //       ? settingJobsOptions(initialState?.myJobs) ?? []
+  //       : [];
+
+  //   const postDraftJobOptions =
+  //     entryDetails.entryAs === "Team"
+  //       ? filterJobs(initialState?.postDraftChangesJobs, "Team")
+  //       : entryDetails.entryAs === "Member"
+  //       ? filterJobs(initialState?.postDraftChangesJobs, "Individual")
+  //       : [];
+
+  //   if (showPostDraftChangesForm) {
+  //     setEntryDetails((prev) => ({ ...prev, jobOptions: postDraftJobOptions }));
+  //     console.log("postDraftJobOptions",postDraftJobOptions)
+  //   } else {
+  //     setEntryDetails((prev) => ({ ...prev, jobOptions: options }));
+  //   }
+  // }, [
+  //   initialState?.myJobs,
+  //   entryDetails?.entryAs,
+  //   initialState?.myTeams?.assigned_jobs,
+  //   initialState.postDraftChangesJobs,
+  //   showPostDraftChangesForm,
+  // ]);
+// console.log("initialState?.myTeams",initialState.myTeams)
   // helper function for selecting the Entry as radio group - Entry as an Individual or Entry as a Team
   const handleEntryAs = (e) => {
-    setEntryDetails((prev) => ({ ...prev, entryAs: e.target.value,  bpoNo: null, job: null }));
-
-
+    setEntryDetails((prev) => ({ ...prev, entryAs: e.target.value, job: "" }));
   };
 
   // Resetting the whole state
@@ -80,7 +332,6 @@ const MyVerticallyCenteredModal = (props) => {
       entryAs: "",
       startTime: "",
       endTime: "",
-      bpoNo:""
     }));
   };
 
@@ -172,107 +423,6 @@ const MyVerticallyCenteredModal = (props) => {
     setShowPostDraftChangesForm(formType === "postDraftChanges");
     handleClear();
   };
-
-  useEffect(() => {
-    const settingBPOOptions = (data) => {
-      if (Array.isArray(data)) {
-        return data
-          .filter((job) => job.bpo_no)
-          .map((job) => ({
-            label: job.bpo_no,
-            value: job.bpo_no,
-          }));
-      } else {
-        return [];
-      }
-    };
-
-    const bpoOptions =
-      entryDetails.entryAs === "Team"
-        ? settingBPOOptions(initialState?.myTeams?.assigned_jobs) ?? []
-        : entryDetails.entryAs === "Member"
-        ? settingBPOOptions(initialState?.myJobs) ?? []
-        : [];
-
-    setEntryDetails((prev) => ({ ...prev, bpoNoOptions: bpoOptions }));
-  }, [
-    initialState?.myJobs,
-    initialState?.myTeams?.assigned_jobs,
-    entryDetails.entryAs,
-  ]);
-
-  // setting Job Options
-  useEffect(() => {
-    const settingJobsOptions = (data, selectedBPO) => {
-      if (Array.isArray(data)) {
-        return data
-          .filter(
-            (job) =>
-              job.bpo_no === selectedBPO && job.job_status === "In Progress"
-          )
-          .map((job) => ({
-            label: `${
-              entryDetails.entryAs === "Team" ? job.task_name : job.job_name
-            } (Period start date: ${job.assigned_on}, Period end date: ${
-              job.due_on
-            })`,
-            value:
-              entryDetails.entryAs === "Team" ? job.task_id : job.assign_id,
-          }));
-      } else {
-        return [];
-      }
-    };
-
-    const jobOptions =
-      entryDetails.entryAs === "Team"
-        ? settingJobsOptions(
-            initialState?.myTeams?.assigned_jobs,
-            entryDetails.bpoNo
-          ) ?? []
-        : entryDetails.entryAs === "Member"
-        ? settingJobsOptions(initialState?.myJobs, entryDetails.bpoNo) ?? []
-        : [];
-
-    setEntryDetails((prev) => ({ ...prev, jobOptions }));
-
-    const filterJobs = (data, type,selectedBPO) => {
-      if (Array.isArray(data)) {
-        console.log(data,"datadatadatadata")
-        return data
-          .filter((job) => job.assign_as === type && job.bpo_no === selectedBPO)
-          .map((job) => ({
-            label: `${job.job_name} (Period start date: ${job.assigned_on}, Period end date: ${job.due_on})`,
-            value: job.assign_id,
-          }));
-      }
-      return [];
-    };
-
-    const postDraftJobOptions =
-    entryDetails.entryAs === "Team"
-      ? filterJobs(initialState?.postDraftChangesJobs,entryDetails.bpoNo, "Team")
-      : entryDetails.entryAs === "Member"
-      ? filterJobs(initialState?.postDraftChangesJobs, "Individual")
-      : [];
-
-  setEntryDetails(prev => ({ ...prev, postJobOption: postDraftJobOptions }));
-
-  if (showPostDraftChangesForm) {
-    setEntryDetails((prev) => ({ ...prev, postJobOption: postDraftJobOptions }));
-    console.log("postDraftJobOptions",postDraftJobOptions)
-  } else {
-    // setEntryDetails((prev) => ({ ...prev, jobOptions}));
-  }
-  }, [
-    initialState?.myJobs,
-    initialState?.myTeams?.assigned_jobs,
-    entryDetails.entryAs,
-    entryDetails.bpoNo,
-    initialState?.postDraftChangesJobs,
-    showPostDraftChangesForm,
-  ]);
-console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJobs)
 
   return (
     <Modal
@@ -375,63 +525,98 @@ console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJ
               </div>
               {/* Job selection DropDown  */}
               {/* <div className="form-group mt-4 w-100">
-                <label htmlFor="jobName">Job Name:</label>
-                <Select
-                  className="react-select-custom-styling__container"
-                  classNamePrefix="react-select-custom-styling"
-                  isClearable={false}
-                  isSearchable={true}
-                  name="jobName"
-                  onChange={(value) => {
+            <label htmlFor="bpoNo">BPO No:</label>
+            <Select
+                className="react-select-custom-styling__container"
+                classNamePrefix="react-select-custom-styling"
+                isClearable={false}
+                isSearchable={true}
+                name="bpoNo"
+                onChange={(selectedOption) => {
                     setEntryDetails((prevState) => ({
-                      ...prevState,
-                      job: value,
+                        ...prevState,
+                        bpoNo: selectedOption ? selectedOption.value : "",
                     }));
-                  }}
-                  value={entryDetails?.job}
-                  options={entryDetails?.jobOptions}
-                />
-              </div> */}
-              <div className="form-group mt-4 w-100">
-                <label htmlFor="bpoNo">BPO No:</label>
-                <Select
-                  className="react-select-custom-styling__container"
-                  classNamePrefix="react-select-custom-styling"
-                  isClearable={false}
-                  isSearchable={true}
-                  name="bpoNo"
-                  onChange={(selectedOption) => {
+                }}
+                value={entryDetails.bpoNo ? { value: entryDetails.bpoNo, label: entryDetails.bpoNo } : null}
+                options={entryDetails.bpoNoOptions}
+            />
+        </div>
+        <div className="form-group mt-4 w-100">
+            <label htmlFor="jobName">Job Name:</label>
+            <Select
+                className="react-select-custom-styling__container"
+                classNamePrefix="react-select-custom-styling"
+                isClearable={false}
+                isSearchable={true}
+                name="jobName"
+                onChange={(selectedOption) => {
                     setEntryDetails((prevState) => ({
-                      ...prevState,
-                      bpoNo: selectedOption ? selectedOption.value : "",
+                        ...prevState,
+                        job: selectedOption ? selectedOption.value : "",
                     }));
-                  }}
-                  value={
-                    entryDetails.bpoNo
-                      ? { value: entryDetails.bpoNo, label: entryDetails.bpoNo }
-                      : null
-                  }
-                  options={entryDetails.bpoNoOptions}
-                />
-              </div>
-              <div className="form-group mt-4 w-100">
-                <label htmlFor="jobName">Job Name:</label>
-                <Select
-                  className="react-select-custom-styling__container"
-                  classNamePrefix="react-select-custom-styling"
-                  isClearable={false}
-                  isSearchable={true}
-                  name="jobName"
-                  onChange={(value) => {
-                    setEntryDetails((prevState) => ({
-                      ...prevState,
-                      job: value,
-                    }));
-                  }}
-                  value={entryDetails?.job}
-                  options={entryDetails?.jobOptions}
-                />
-              </div>
+                }}
+                value={entryDetails.job ? { value: entryDetails.job, label: entryDetails.job } : null}
+                options={entryDetails.jobOptions}
+            />
+        </div> */}
+         {/* <div className="form-group mt-4 w-100">
+        <label htmlFor="bpoNo">BPO No:</label>
+        <Select
+          className="react-select-custom-styling__container"
+          classNamePrefix="react-select-custom-styling"
+          isClearable={false}
+          isSearchable={true}
+          name="bpoNo"
+          onChange={(selectedOption) => {
+            setEntryDetails((prevState) => ({
+              ...prevState,
+              bpoNo: selectedOption ? selectedOption.value : null,
+              job: null, // Reset job selection when BPO No changes
+            }));
+          }}
+          value={entryDetails.bpoNo ? { value: entryDetails.bpoNo, label: entryDetails.bpoNo } : null}
+          options={entryDetails.bpoNoOptions}
+        />
+      </div> */}
+      <div className="form-group mt-4 w-100">
+        <label htmlFor="bpoNo">BPO No:</label>
+        <Select
+          className="react-select-custom-styling__container"
+          classNamePrefix="react-select-custom-styling"
+          isClearable={false}
+          isSearchable={true}
+          name="bpoNo"
+          onChange={(selectedOption) => {
+            setEntryDetails((prevState) => ({
+              ...prevState,
+              bpoNo: selectedOption ? selectedOption.value : "",
+            }));
+          }}
+          value={entryDetails.bpoNo ? { value: entryDetails.bpoNo, label: entryDetails.bpoNo } : null}
+          options={entryDetails.bpoNoOptions}
+        />
+      </div>
+      <div className="form-group mt-4 w-100">
+        <label htmlFor="jobName">Job Name:</label>
+        <Select
+          className="react-select-custom-styling__container"
+          classNamePrefix="react-select-custom-styling"
+          isClearable={false}
+          isSearchable={true}
+          name="jobName"
+          onChange={(value) => {
+            setEntryDetails((prevState) => ({
+              ...prevState,
+              job: value,
+            }));
+          }}
+          value={entryDetails?.job}
+          options={entryDetails?.jobOptions}
+        />
+          
+     
+      </div>
               {/* Date Picker for Job date  */}
               <div className="form-group mt-4 w-100">
                 <label htmlFor="jobDate">Job Date:</label>
@@ -717,6 +902,7 @@ console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJ
                   </label>
                 </div>
               </div>
+         
               {/* Job selection DropDown  */}
               <div className="form-group mt-4 w-100">
             <label htmlFor="bpoNo">BPO No:</label>
@@ -737,7 +923,26 @@ console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJ
               options={entryDetails.bpoNoOptions}
             />
           </div>
-              <div className="form-group mt-4 w-100">
+          {/* Job Name Selection */}
+          <div className="form-group mt-4 w-100">
+            <label htmlFor="jobName">Job Name:</label>
+            <Select
+              className="react-select-custom-styling__container"
+              classNamePrefix="react-select-custom-styling"
+              isClearable={false}
+              isSearchable={true}
+              name="jobName"
+              onChange={(value) => {
+                setEntryDetails((prevState) => ({
+                  ...prevState,
+                  job: value,
+                }));
+              }}
+              value={entryDetails?.job}
+              options={entryDetails?.jobOptions}
+            />
+          </div>
+              {/* <div className="form-group mt-4 w-100">
                 <label htmlFor="jobName">Job Name:</label>
                 <Select
                   className="react-select-custom-styling__container"
@@ -752,9 +957,9 @@ console.log("initialState?.postDraftChangesJobs",initialState?.postDraftChangesJ
                     }));
                   }}
                   value={entryDetails?.job}
-                  options={entryDetails?.postJobOption}
+                  options={entryDetails?.jobOptions}
                 />
-              </div>
+              </div> */}
               {/* Date Picker for Job date  */}
               <div className="form-group mt-4 w-100">
                 <label htmlFor="jobDate">Job Date:</label>
@@ -854,3 +1059,4 @@ export const AddJobEntryModal = ({
     </>
   );
 };
+

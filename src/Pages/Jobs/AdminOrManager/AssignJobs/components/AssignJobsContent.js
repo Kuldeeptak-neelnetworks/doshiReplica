@@ -28,6 +28,7 @@ import { EditAssignJobModal } from "./EditAssignJobModal";
 import { formatDate } from "../../../../../utils/utilities/utilityFunctions";
 import { ContextAPI } from "../../../../../Context/ApiContext/ApiContext";
 import { DeleteAssignJobModal } from "./DeleteAssignJobModal";
+import { format, parse,parseISO, isValid } from 'date-fns';
 
 const AssignJobsContent = ({ setIsUpdated, isLoading }) => {
   const navigate = useNavigate();
@@ -64,6 +65,81 @@ const AssignJobsContent = ({ setIsUpdated, isLoading }) => {
     },
   ];
 
+
+
+  // const formattedDate = (dateString) => {
+  //   const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString('en-GB', options); // 'en-GB' ensures "day month year" format
+  // };
+  // const formattedDate = (dateString) => {
+  //   const date = new Date(dateString);
+    
+  //   // Extract day, month (as number), and year
+  //   const day = date.getDate().toString().padStart(2, '0');
+  //   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based in JavaScript
+  //   const year = date.getFullYear();
+    
+  //   return `${day}/${month}/${year}`;
+  // };
+  // const formatDate = (date) => {
+  //   if (!date) return "N.A";
+    
+  //   const dateObj = new Date(date);
+  //   const day = dateObj.getDate();
+  //   const month = dateObj.toLocaleString('default', { month: 'short' });
+  //   const year = dateObj.getFullYear();
+    
+  //   const suffix = (day) => {
+  //     if (day >= 11 && day <= 13) return 'th';
+  //     switch (day % 10) {
+  //       case 1: return 'st';
+  //       case 2: return 'nd';
+  //       case 3: return 'rd';
+  //       default: return 'th';
+  //     }
+  //   };
+  
+  //   return `${day}${suffix(day)} ${month} ${year}`;
+  // };
+
+
+  const detectAndParseDate = (dateStr) => {
+    // Check if the date string is in 'yyyy-MM-dd' format
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return parseISO(dateStr);
+    }
+    // Check if the date string is in 'dd-MM-yyyy' format
+    else if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+      return parse(dateStr, 'dd-MM-yyyy', new Date());
+    }
+    // Invalid date format
+    return null;
+  };
+  
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N.A";
+  
+    const dateObj = detectAndParseDate(dateStr);
+  
+    if (!dateObj || !isValid(dateObj)) return "N.A";
+  
+    const day = format(dateObj, 'd'); // Day without leading zero
+    const month = format(dateObj, 'MMM'); // Month abbreviation
+    const year = format(dateObj, 'yyyy'); // Year
+  
+    const suffix = (day) => {
+      if (day >= 11 && day <= 13) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+  
+    return `${day}${suffix(day)} ${month} ${year}`;
+  };
   const tableColumns = [
     {
       Header: "Sr no.",

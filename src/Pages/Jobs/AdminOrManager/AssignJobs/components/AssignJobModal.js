@@ -97,7 +97,7 @@ const MyVerticallyCenteredModal = (props) => {
       membersOptions: initialState.membersList
         .filter(
           (member) =>
-            (member.member_role === "members" ||
+            (member.member_role === "members" || member.member_role==="members,team_sub_leader"||
               member.member_role === "team_leaders,members") &&
             member.current_status === "active"
         )
@@ -283,7 +283,7 @@ const MyVerticallyCenteredModal = (props) => {
     let bool = [
       jobSelected,
       jobAssignedTo,
-      jobDescription,
+      // jobDescription,
       billingRate,
       billingServiceSelected?.value,
     ];
@@ -305,7 +305,7 @@ const MyVerticallyCenteredModal = (props) => {
         [isJobOngoing === "no" && !jobEndDate]: "Please provide Job due date!",
         [isJobOngoing === "no" && !jobStartDate]:
           "Please provide Job start date!",
-        [!jobDescription]: "Please provide Job description!",
+        // [!jobDescription]: "Please provide Job description!",
         [!billingRate]: "Please provide billing rate!",
         [!billingServiceSelected.value]: "Please select a billing service!",
         [!jobAssignedTo]: "Please select a assignee!",

@@ -82,8 +82,8 @@ const Invoice = () => {
     totalPrice: null,
     subTotal: null,
     paymentStatus: "",
-    // tax: [],
-    tax: [taxOptions.find(option => option.value === "20")],
+    tax: [],
+    // tax: [taxOptions.find(option => option.value === "20")],
     note: "",
     dueAmount: 0,
     partialPaidAmount: 0,
@@ -281,7 +281,8 @@ const Invoice = () => {
 
         const setTax = (taxArray) => {
           if (!Array.isArray(taxArray)) {
-            return [];
+            // return [];
+            return [taxOptions.find(option => option.value === "20")];
           }
 
           return taxArray.reduce((acc, curr) => {

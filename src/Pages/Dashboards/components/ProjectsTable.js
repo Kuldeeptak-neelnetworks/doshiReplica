@@ -91,7 +91,7 @@ const ProjectsTable = ({ tableInstance, projectsData }) => {
         </tbody>
       </table>
       <div className="pagination">
-        {userRole === "team_leaders,members" ? (
+        {userRole === "team_leaders,members" || userRole === "members,team_sub_leader" ? (
           ""
         ) : (
           <p

@@ -301,6 +301,8 @@ export const userRole = (role) => {
       return "IT Member";
     case "operation_member":
       return "Operation Member";
+      case "members,team_sub_leader":
+        return "Sub Team Leader"
     default:
       return "Member";
   }

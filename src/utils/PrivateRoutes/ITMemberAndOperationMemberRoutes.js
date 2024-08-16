@@ -14,7 +14,7 @@ const ITMemberAndOperationMemberRoutes = () => {
   // );
 
   const userRole = localStorage.getItem("userRole");
-  return userRole === "it_member" || userRole === "operation_member" || userRole === `team_leaders,members`   ? (
+  return userRole === "it_member" || userRole === "operation_member" || userRole === `team_leaders,members` ||userRole === "members,team_sub_leader"  ? (
     <Outlet />
   ) : (
     <Navigate to="/" />

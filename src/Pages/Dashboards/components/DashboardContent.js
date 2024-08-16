@@ -23,7 +23,7 @@ const DashboardContent = ({ title }) => {
       <PageHeader title={title} />
 
       {/* Main Content */}
-      {userRole === "members" ||userRole==="members,team_sub_leader" ? (
+      {userRole === "members" ? (
         <div
           className="d-flex justify-content-center g-10 w-60"
           style={{ padding: "76px" }}
@@ -48,17 +48,17 @@ const DashboardContent = ({ title }) => {
       ) : (
         ""
       )}
-      {userRole === "members" ||userRole==="members,team_sub_leader" ? (
+      {userRole === "members" ? (
         ""
       ) : (
         <section className="m-auto mt-3 gap-5 main-content_form-section d-flex flex-column justify-content-start align-items-center " style={{width:"94%"}}>
           <div className="d-flex w-100 justify-content-between align-items-start gap-4">
-            {userRole === "team_leaders,members" ? (
+            {userRole === "team_leaders,members"|| userRole ==="members,team_sub_leader" ? (
               <TeamLeaderComplatedJob />
             ) : (
               ""
             )}
-            {userRole === "team_leaders,members" ? (
+            {userRole === "team_leaders,members"  || userRole ==="members,team_sub_leader"? (
               <TeamLeaderInProgressjob />
             ) : (
               <ClientInvoicingBlock />

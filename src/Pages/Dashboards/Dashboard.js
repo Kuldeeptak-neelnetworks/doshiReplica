@@ -3,6 +3,7 @@ import AdminDashboard from "./Admin/AdminDashboard";
 import MemberDashboard from "./Member/MemberDashboard";
 import ManagerDashboard from "./Manager/ManagerDashboard";
 import TeamLeaderDashboard from "./TeamLeader/TeamLeaderDashboard";
+import SubTeamLeaderDashboard from "./SubTeamLeader/SubTeamLeader";
 
 const Dashboard = () => {
   const userRole = localStorage.getItem("userRole");
@@ -12,6 +13,8 @@ const Dashboard = () => {
     <ManagerDashboard />
   ) : userRole === "team_leaders,members" ? (
     <TeamLeaderDashboard />
+  ) : userRole === "members,team_sub_leader" ? (
+    <SubTeamLeaderDashboard />
   ) : (
     <MemberDashboard />
   );

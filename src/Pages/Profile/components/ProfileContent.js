@@ -61,7 +61,7 @@ const ProfileContent = () => {
   useEffect(() => {
     if (
       userDetails?.member_role === "members" ||
-      userDetails?.member_role === "team_leaders,members"
+      userDetails?.member_role === "team_leaders,members"|| userDetails?.member_role === "members,team_sub_leader"
     ) {
       getAllMyTimeEntries();
       getJobsDetailsByMemberId();
@@ -84,7 +84,7 @@ const ProfileContent = () => {
   useEffect(() => {
     if (
       userDetails?.member_role === "members" ||
-      userDetails?.member_role === "team_leaders,members"
+      userDetails?.member_role === "team_leaders,members"||userDetails?.member_role === "members,team_sub_leader"
     ) {
       extractTimeEntries(initialState?.myAllTimeEntries);
     }
@@ -94,7 +94,7 @@ const ProfileContent = () => {
   useEffect(() => {
     if (
       userDetails?.member_role === "members" ||
-      userDetails?.member_role === "team_leaders,members"
+      userDetails?.member_role === "team_leaders,members" ||userDetails?.member_role === "members,team_sub_leader"
     ) {
       setProjectDetails(initialState?.myJobs);
     }
@@ -170,7 +170,7 @@ const ProfileContent = () => {
         </form>
 
         {userDetails?.member_role === "members" ||
-        userDetails?.member_role === "team_leaders,members" ? (
+        userDetails?.member_role === "team_leaders,members"||userDetails?.member_role === "members,team_sub_leader" ? (
           <div className="w-50 d-flex flex-column gap-3 zIndex-2">
             {/* Project Details Section */}
             <div className={`${styles.detailsWrapper}`}>

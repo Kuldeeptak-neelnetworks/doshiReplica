@@ -4,11 +4,13 @@ import { ContextSidebarToggler } from "../../../../Context/SidebarToggler/Sideba
 import Breadcrumbs from "../../../../templates/Breadcrumbs";
 import {
   DownSVG,
-  reportsIcon,
+  reportsIcon,  fileIcon,
   teamsIcon1,
 } from "../../../../utils/ImportingImages/ImportingImages";
+import PageHeader from "../../../../templates/PageHeader";
+
 import styles from "./TeamsContent.module.css";
-import { formatDate } from "../../../../utils/utilities/utilityFunctions";
+// import { formatDate } from "../../../../utils/utilities/utilityFunctions";
 import { EditTeamJobModal } from "./EditTeamJobModal";
 import TeamTable from "./TeamTable";
 import ReactTableSkeleton from "../../../../templates/ReactTableSkeleton";
@@ -54,6 +56,27 @@ const TeamsContent = ({
     }
     return newNamesArray;
 
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "N.A";
+    
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const month = dateObj.toLocaleString('default', { month: 'short' });
+    const year = dateObj.getFullYear();
+    
+    const suffix = (day) => {
+      if (day >= 11 && day <= 13) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+  
+    return `${day}${suffix(day)} ${month} ${year}`;
   };
   // const getMembersNames = (dataset) => {
   //   const names = dataset
@@ -119,6 +142,11 @@ const TeamsContent = ({
       Cell: ({ row }) => row.original?.task_name || "N.A",
   
     },
+    {
+      Header: "BPO No",
+      accessor: "bpo_no",
+      Cell: ({ row }) => row.original.bpo_no || "N.A",
+    },
   
     {
       Header: "Assigned on",
@@ -135,6 +163,7 @@ const TeamsContent = ({
       accessor: "job_description",
       Cell: ({ row }) => row.original.job_description || "N.A",
     },
+   
     {
       Header: "Billable Hours",
       accessor: "total_billable_hours",
@@ -182,7 +211,7 @@ const TeamsContent = ({
             data-tooltip-content="Update"
             data-tooltip-place="top"
           >
-            {userRole === "team_leaders,members" ? (
+            {userRole === "team_leaders,members" || userRole==="members,team_sub_leader" ? (
               <EditTeamJobModal
                 teamJobData={row.original}
                 teamId={teamData?.id}
@@ -264,22 +293,31 @@ const TeamsContent = ({
       <div className="mr-40 ml-30 mb-15">
         <Breadcrumbs crumbs={breadCrumbs} />
       </div>
-      <div></div>
+
 
       {/* Top header section */}
-      <div className="mb-5">
+      {/* <div className="mb-5">
         <section className="main-content_header">
           <div className="d-flex justify-content-center align-items-center page-heading">
             <img src={teamsIcon1} alt={"Teams"} />
             <p className="m-0 fs-4">Teams</p>
           </div>
         </section>
-      </div>
+      </div> */}
+
+      <PageHeader
+          tableInstance={tableInstance}
+          icon={fileIcon}
+          headerTitle={"Teams"}
+        >
+       
+        </PageHeader>
 
       {/* filters */}
-      <div className="">
-        {userRole === "team_leaders,members" && (
+      <div className="mt-5">
+      {(userRole === "team_leaders,members" || userRole === "members,team_sub_leader") && (
           <div className="mr-40 ml-30 mb-4 d-flex justify-content-start align-items-center gap-4">
+            
             <div className="relative-wrapper w-25">
               <img
                 className="search-icon"
@@ -305,7 +343,7 @@ const TeamsContent = ({
         )}
 
         {/* Team Details */}
-        {teamData.team_name ? (
+        {/* {teamData.team_name ? (
           <div className="mr-40 ml-30 mb-15 my-teams-wrapper d-flex justify-content-start align-items-start gap-5 w-75">
             <div className="w-25">
               <p className={`m-0 ${styles.heading}`}>{teamData?.team_name}</p>
@@ -317,25 +355,21 @@ const TeamsContent = ({
                 {teamData?.member_names?.split(",")?.map((member, index) => (
                   <p key={index} className={`m-0 ${styles.text}`}>
                     {member}
+
+                    {console.log("member",member)}
                   </p>
                 ))}
+
+           
               </div>
-              {/* <div className={`mt-3 ${styles.teamMembersList}`}>
-                {getMembersNames(teamData?.member_names).map(
-                  (member, index) => (
-                    <p key={index} className={`m-0 ${styles.text}`}>
-                      {member}
-                    </p>
-                  )
-                )}
-              </div> */}
+          
             </div>
           </div>
         ) : (
           <div className="mr-40 ml-30 mb-15">
             <h5>You are not a part of any Team yet!</h5>
           </div>
-        )}
+        )} */}
       </div>
 
       {userRole === "team_leaders,members" || userRole === "members" ||userRole === "members,team_sub_leader" ? (
